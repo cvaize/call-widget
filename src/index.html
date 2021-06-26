@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Call Widget Demo</title>
+    <link rel="stylesheet" href="call-widget.min.css">
+    <script src="call-widget.min.js"></script>
+    <style>
+        body{
+            background-color: #F2F4F6;
+        }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align: center">Call Widget Demo</h1>
+<h2 style="text-align: center">The widget should appear on the bottom right =)</h2>
+
+<div class="call-widget">
+    <div class="call-widget__photo">
+        <img style="width: 100%" src="https://s3.eu-central-1.amazonaws.com/crm.demetrius.ru/avatars/2231/1545567720-96a24834d215b311f4ca1c8979e279cb.png" alt="">
+    </div>
+    <div class="call-widget__box-redirect">
+        <div class="call-widget__redirect">
+            <button class="call-widget__btn call-widget__btn-redirect"></button>
+            <button class="call-widget__btn call-widget__btn-close" style="display: none"></button>
+            Перевести на
+            <label class="call-widget__redirect__select-wrapper" aria-label="Перевести на оператора" style="display: none">
+                <select class="call-widget__select">
+                    <option value="102">102</option>
+                    <option value="103">103</option>
+                    <option value="104">104</option>
+                    <option value="105">105</option>
+                    <option value="106">106</option>
+                    <option value="107">107</option>
+                    <option value="108">108</option>
+                    <option value="109">109</option>
+                </select>
+            </label>
+            <button class="call-widget__btn call-widget__btn-redirect call-widget__btn--warning" style="display: none"></button>
+        </div>
+        <div class="call-widget__time">
+            00:02:30
+        </div>
+    </div>
+    <div class="call-widget__title">Орлов Дмитрий Александрович</div>
+    <div class="call-widget__box-phone">
+        <div class="call-widget__tel-wrapper">
+            <div class="call-widget__tel">+79058832238</div>
+        </div>
+        <button class="call-widget__btn call-widget__btn-circle call-widget__btn-circle--danger"></button>
+        <button class="call-widget__btn call-widget__btn-circle call-widget__btn-circle--primary active" disabled></button>
+    </div>
+</div>
+</body>
+</html>
