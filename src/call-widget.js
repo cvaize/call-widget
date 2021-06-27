@@ -1,10 +1,12 @@
 import WidgetScheduleItem from "./schedule/items/widget";
 import TelScheduleItem from "./schedule/items/tel";
 import TitleScheduleItem from "./schedule/items/title";
+import InfoScheduleItem from "./schedule/items/info";
 
 const defaultSettings = {
     id: null,
-    selector: 'body'
+    selector: 'body',
+    startedTime: '00:00:00'
 }
 
 const defaultEntityVars = {
@@ -62,9 +64,9 @@ export default class CallWidget {
     }
 
     /**
+     * Инициировать звонок: покажется виджет и даст возможность ответить на звонок
      * @param {String} tel
      * @param {String} title
-     * @param {String} selector
      */
     call({tel, title = null}) {
         if(!tel){
@@ -90,6 +92,44 @@ export default class CallWidget {
         /**
          * Вызов функции рендера очереди
          */
+        this._render()
+    }
+
+    /**
+     * Ответить на звонок
+     */
+    answerCall(){
+        // Нужно установить начальное время, чтобы показать его, а потом уже пользователь будет его устанавливать
+        this._entities.info.time = this._settings.startedTime
+
+        // Нужно заблокировать кнопку "принять звонок" и установить активный статус кнопке "принять звонок"
+        // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
+        this._schedule.push(new WidgetScheduleItem('activePrimaryBtn', 0, this))
+        this._schedule.push(new InfoScheduleItem('fill', 0, this))
+        this._schedule.push(new InfoScheduleItem('show', 150, this))
+        this._render()
+    }
+
+    /**
+     * Положить трубку
+     */
+    hangUpCall() {
+        // Нужно заблокировать кнопки, свернуть все дополнительный поля и скрыть виджет
+        // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
+        this._schedule.push(new WidgetScheduleItem('activeDangerBtn', 0, this))
+        this._schedule.push(new InfoScheduleItem('hide', 150, this))
+        this._schedule.push(new TitleScheduleItem('hide', 300, this))
+        this._schedule.push(new WidgetScheduleItem('hide', 300, this))
+        this._schedule.push(new WidgetScheduleItem('normal', 0, this))
+        this._render()
+    }
+
+    /**
+     * Установка времени, по умолчанию формат 00:00:00
+     */
+    setTime(time) {
+        this._entities.info.time = time
+        this._schedule.push(new InfoScheduleItem('fill', 0, this))
         this._render()
     }
 
@@ -165,9 +205,7 @@ export default class CallWidget {
     _handleClickPrimaryBtn(){
         const result = this._handleEvent(EVENT_BTN_PRIMARY_CLICK)
         if(result){
-            // Нужно заблокировать и установить активный статус кнопке "принять звонок"
-            // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
-
+            this.answerCall()
         }
     }
 
@@ -178,9 +216,7 @@ export default class CallWidget {
     _handleClickDangerBtn(){
         const result = this._handleEvent(EVENT_BTN_DANGER_CLICK)
         if(result){
-            // Нужно заблокировать кнопки и свернуть все дополнительный поля и скрыть виджет
-            // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
-
+            this.hangUpCall()
         }
     }
 
@@ -241,8 +277,12 @@ export default class CallWidget {
     _getTemplate() {
         const h = this._h
 
-        return h('div', {id: this._entities.widget.id, class: 'call-widget', style: 'transform: translateX(25em);'}, [
-            h('div', {id: this._entities.title.wrapperId, class: 'call-widget__title-wrapper', style: 'height: 0;'}, [
+        return h('div', {id: this._entities.widget.id, class: 'call-widget'}, [
+            h('div', {id: this._entities.info.id, class: 'call-widget__box-info'}, [
+                h('div', {class: 'call-widget__redirect'}),
+                h('div', {id: this._entities.info.timeId, class: 'call-widget__time'})
+            ]),
+            h('div', {id: this._entities.title.wrapperId, class: 'call-widget__box-title'}, [
                 h('div', {id: this._entities.title.id, class: 'call-widget__title'})
             ]),
             h('div', {class: 'call-widget__box-phone'}, [
@@ -286,6 +326,7 @@ export default class CallWidget {
             widget: { ...defaultEntityVars, id, primaryBtnId: id+'-primary-btn', dangerBtnId: id+'-danger-btn' },
             title: { ...defaultEntityVars, id: id+'-title', wrapperId: id+'-wrapper-title', content: null },
             tel: { ...defaultEntityVars, id: id+'-tel', wrapperId: id+'-wrapper-tel', content: null },
+            info: { ...defaultEntityVars, id: id+'-info', timeId: id+'-time', time: this._settings.startedTime },
         }
     }
 }

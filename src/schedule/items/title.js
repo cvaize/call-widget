@@ -11,6 +11,11 @@ export default class TitleScheduleItem extends ScheduleItem {
     _show() {
         let titleWrapper = document.getElementById(this.callWidget._entities.title.wrapperId)
         titleWrapper.style.transitionDuration = this.time+'ms'
-        titleWrapper.style.height = '3em'
+        titleWrapper.classList.add('show')
+    }
+    _hide() {
+        let titleWrapper = document.getElementById(this.callWidget._entities.title.wrapperId)
+        titleWrapper.style.transitionDuration = this.time+'ms'
+        titleWrapper.classList.remove('show')
     }
 }

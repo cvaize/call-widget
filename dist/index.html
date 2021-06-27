@@ -20,7 +20,31 @@
     <h2>The widget should appear on the bottom right =)</h2>
 
     <div>
-        <button onclick="handleCall()">Звонок на номер +79998887766</button>
+        <button onclick="handleCall({tel: '+79998887766', title: 'Орлов Дмитрий Александрович'})">
+            Звонок пользователя Орлов Дмитрий Александрович c номера +79998887766
+        </button>
+        <br>
+        <br>
+        <button onclick="handleCall({tel: '86664442233', title: 'Константин Константинович Константинопольский'})">
+            Звонок пользователя Константин Константинович Константинопольский c номера 86664442233
+        </button>
+        <br>
+        <br>
+        <button onclick="handleCall({tel: '89994442233'})">
+            Звонок неизвестного пользователя c номера 89994442233
+        </button>
+        <br>
+        <br>
+        Так как этот виджет реализует только управление, он не знает какое время выводить,
+        <br>
+        поэтому вы должны позаботиться об этом с помощью метода callWidget.setTime('00:04:54')
+        <br>
+        А если у вас время начинается не 00:00:00, то в настройках установите параметр startedTime
+        <br>
+        <br>
+        <button onclick="handleSetTime('00:04:54')">
+            Во время звонка установить время 00:04:54
+        </button>
     </div>
 </div>
 
@@ -30,15 +54,24 @@
     var callWidget = new CallWidget()
     callWidget.print()
     var handleBtnPrimaryClick = function (){
-        alert('Клик по кнопке принять звонок')
+        // alert('Клик по кнопке принять звонок')
+
+        // Если вернуть false то можно отключить дальнейшую логику виджета
+        // return false
     }
     var handleBtnDangerClick = function (){
-        alert('Клик по кнопке отклонить звонок')
+        // alert('Клик по кнопке отклонить звонок')
+
+        // Если вернуть false то можно отключить дальнейшую логику виджета
+        // return false
     }
     callWidget.on(callWidget.EVENT_BTN_PRIMARY_CLICK, handleBtnPrimaryClick)
     callWidget.on(callWidget.EVENT_BTN_DANGER_CLICK, handleBtnDangerClick)
-    function handleCall(){
-        callWidget.call({tel: '+79998887766', title: 'Орлов Дмитрий Александрович'})
+    function handleCall(data){
+        callWidget.call(data)
+    }
+    function handleSetTime(data){
+        callWidget.setTime(data)
     }
 </script>
 
@@ -47,7 +80,7 @@
     <div class="call-widget__photo">
         <img style="width: 100%" src="https://s3.eu-central-1.amazonaws.com/crm.demetrius.ru/avatars/2231/1545567720-96a24834d215b311f4ca1c8979e279cb.png" alt="">
     </div>
-    <div class="call-widget__box-redirect">
+    <div class="call-widget__box-info">
         <div class="call-widget__redirect">
             <button class="call-widget__btn call-widget__btn-redirect"></button>
             <button class="call-widget__btn call-widget__btn-close" style="display: none"></button>
@@ -70,7 +103,7 @@
             00:02:30
         </div>
     </div>
-    <div class="call-widget__title-wrapper">
+    <div class="call-widget__box-title">
         <div class="call-widget__title">Орлов Дмитрий Александрович</div>
     </div>
     <div class="call-widget__box-phone">

@@ -30,12 +30,17 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
   width: 20em;
   color: #152536;
   line-height: 1;
+  transform: translateX(25em);
   transition-timing-function: ease-in;
 
   animation: call-widget-radial-pulse 1s infinite;
   //&:hover{
   //  animation: none;
   //}
+
+  &.show{
+    transform: translateX(0em);
+  }
 
   &, *{
     box-sizing: border-box;
@@ -65,13 +70,31 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
     padding: 0.5em;
     color: #666;
   }
-  &__box-redirect + &__title-wrapper, &__time + &__title-wrapper {
+  &__box-info.show + &__box-title {
     margin-top: -1em;
   }
-  &__box-redirect{
+  &__box-phone, &__box-info, &__box-title{
     display: flex;
     position: relative;
-    z-index: 2;
+    transition-timing-function: ease-in;
+    border-radius: 1.5em;
+  }
+  &__box-info, &__box-title{
+    height: 0;
+    &.show{
+      height: 3em;
+      background-color: white;
+    }
+  }
+  &__box-info{
+    z-index: 3;
+  }
+  &__box-title{
+    z-index: 4;
+  }
+  &__box-phone{
+    z-index: 5;
+    background-color: white;
   }
   &__redirect{
     margin-right: auto;
@@ -89,10 +112,6 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
       box-shadow: 0 0 0 1px #15253680;
     }
   }
-  &__title-wrapper{
-    position: relative;
-    height: 3em;
-  }
   &__title {
     display: flex;
     justify-content: flex-start;
@@ -101,13 +120,6 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
     font-size: 1em;
     font-weight: 700;
     padding: 0.5em;
-  }
-  &__box-phone{
-    position: relative;
-    display: flex;
-    border-radius: 1.5em;
-    background-color: white;
-    z-index: 3;
   }
   &__tel-wrapper {
     position: relative;
@@ -212,7 +224,7 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
         background-image: $call-widget-tel-icon;
         transform: scaleX(-1);
       }
-      &:disabled{
+      &.active{
         &:before{
           background-image: $call-widget-tel-icon-active;
         }
