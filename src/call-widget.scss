@@ -30,6 +30,7 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
   width: 20em;
   color: #152536;
   line-height: 1;
+  transition-timing-function: ease-in;
 
   animation: call-widget-radial-pulse 1s infinite;
   //&:hover{
@@ -64,7 +65,7 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
     padding: 0.5em;
     color: #666;
   }
-  &__box-redirect + &__title, &__time + &__title {
+  &__box-redirect + &__title-wrapper, &__time + &__title-wrapper {
     margin-top: -1em;
   }
   &__box-redirect{
@@ -88,6 +89,10 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
       box-shadow: 0 0 0 1px #15253680;
     }
   }
+  &__title-wrapper{
+    position: relative;
+    height: 3em;
+  }
   &__title {
     display: flex;
     justify-content: flex-start;
@@ -98,9 +103,11 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
     padding: 0.5em;
   }
   &__box-phone{
+    position: relative;
     display: flex;
     border-radius: 1.5em;
     background-color: white;
+    z-index: 3;
   }
   &__tel-wrapper {
     position: relative;

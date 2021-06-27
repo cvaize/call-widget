@@ -6,8 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Call Widget Demo</title>
-    <link rel="stylesheet" href="call-widget.min.css">
-    <script src="call-widget.min.js"></script>
+    <link rel="stylesheet" href="call-widget.css">
     <style>
         body{
             background-color: #F2F4F6;
@@ -16,10 +15,35 @@
 </head>
 <body>
 
-<h1 style="text-align: center">Call Widget Demo</h1>
-<h2 style="text-align: center">The widget should appear on the bottom right =)</h2>
+<div style="text-align: center">
+    <h1>Call Widget Demo</h1>
+    <h2>The widget should appear on the bottom right =)</h2>
 
-<div class="call-widget">
+    <div>
+        <button onclick="handleCall()">Звонок на номер +79998887766</button>
+    </div>
+</div>
+
+<script src="call-widget.lib.js"></script>
+
+<script>
+    var callWidget = new CallWidget()
+    callWidget.print()
+    var handleBtnPrimaryClick = function (){
+        alert('Клик по кнопке принять звонок')
+    }
+    var handleBtnDangerClick = function (){
+        alert('Клик по кнопке отклонить звонок')
+    }
+    callWidget.on(callWidget.EVENT_BTN_PRIMARY_CLICK, handleBtnPrimaryClick)
+    callWidget.on(callWidget.EVENT_BTN_DANGER_CLICK, handleBtnDangerClick)
+    function handleCall(){
+        callWidget.call({tel: '+79998887766', title: 'Орлов Дмитрий Александрович'})
+    }
+</script>
+
+<!--START - Шаблон для наглядности-->
+<div class="call-widget" style="display: none;">
     <div class="call-widget__photo">
         <img style="width: 100%" src="https://s3.eu-central-1.amazonaws.com/crm.demetrius.ru/avatars/2231/1545567720-96a24834d215b311f4ca1c8979e279cb.png" alt="">
     </div>
@@ -46,14 +70,17 @@
             00:02:30
         </div>
     </div>
-    <div class="call-widget__title">Орлов Дмитрий Александрович</div>
+    <div class="call-widget__title-wrapper">
+        <div class="call-widget__title">Орлов Дмитрий Александрович</div>
+    </div>
     <div class="call-widget__box-phone">
         <div class="call-widget__tel-wrapper">
-            <div class="call-widget__tel">+79058832238</div>
+            <div class="call-widget__tel">+79998887766</div>
         </div>
         <button class="call-widget__btn call-widget__btn-circle call-widget__btn-circle--danger"></button>
         <button class="call-widget__btn call-widget__btn-circle call-widget__btn-circle--primary active" disabled></button>
     </div>
 </div>
+<!--END - Шаблон для наглядности-->
 </body>
 </html>
