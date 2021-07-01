@@ -2,24 +2,28 @@ import WidgetScheduleItem from "./schedule/items/widget";
 import TelScheduleItem from "./schedule/items/tel";
 import TitleScheduleItem from "./schedule/items/title";
 import InfoScheduleItem from "./schedule/items/info";
+import RedirectScheduleItem from "./schedule/items/redirect";
+import h from "./utility/h"
 
 const defaultSettings = {
     id: null,
     selector: 'body',
-    startedTime: '00:00:00'
+    startedTime: '00:00:00',
 }
 
 const defaultEntityVars = {
     loading: false,
+    show: false,
     showing: false,
     showed: true,
     id: null,
 }
 
-const EVENT_BTN_PRIMARY_CLICK = 'btn_primary:click'
-const EVENT_BTN_DANGER_CLICK = 'btn_danger:click'
+export const EVENT_BTN_PRIMARY_CLICK = 'btn_primary:click'
+export const EVENT_BTN_DANGER_CLICK = 'btn_danger:click'
+export const EVENT_BTN_REDIRECT_CLICK = 'btn_redirect:click'
 
-const events = [EVENT_BTN_PRIMARY_CLICK, EVENT_BTN_DANGER_CLICK]
+const events = [EVENT_BTN_PRIMARY_CLICK, EVENT_BTN_DANGER_CLICK, EVENT_BTN_REDIRECT_CLICK]
 
 export default class CallWidget {
     /**
@@ -48,13 +52,19 @@ export default class CallWidget {
      */
     _eventHandlers
 
+    _funHandleClickShowRedirectBtn
+    _funHandleClickHideRedirectBtn
+    _funHandleClickRedirectBtn
+
     EVENT_BTN_PRIMARY_CLICK
     EVENT_BTN_DANGER_CLICK
+    EVENT_BTN_REDIRECT_CLICK
 
     constructor(settings = {}) {
 
         this.EVENT_BTN_PRIMARY_CLICK = EVENT_BTN_PRIMARY_CLICK
         this.EVENT_BTN_DANGER_CLICK = EVENT_BTN_DANGER_CLICK
+        this.EVENT_BTN_REDIRECT_CLICK = EVENT_BTN_REDIRECT_CLICK
 
         if(!settings.id) settings.id = 'call-widget-'+Math.round(Math.random() * 10e6)
 
@@ -121,6 +131,7 @@ export default class CallWidget {
         this._schedule.push(new TitleScheduleItem('hide', 300, this))
         this._schedule.push(new WidgetScheduleItem('hide', 300, this))
         this._schedule.push(new WidgetScheduleItem('normal', 0, this))
+        this._schedule.push(new RedirectScheduleItem('hide', 0, this))
         this._render()
     }
 
@@ -130,6 +141,16 @@ export default class CallWidget {
     setTime(time) {
         this._entities.info.time = time
         this._schedule.push(new InfoScheduleItem('fill', 0, this))
+        this._render()
+    }
+
+    /**
+     * Установка номеров телефонов для выбора редиректа
+     * @param {[String]} numbers
+     */
+    setRedirectNumbers(numbers) {
+        this._entities.redirect.numbers = numbers
+        this._schedule.push(new RedirectScheduleItem('fill', 0, this))
         this._render()
     }
 
@@ -167,10 +188,11 @@ export default class CallWidget {
     }
 
     _attachEvents() {
+        let th = this
+
         let primaryBtn = document.getElementById(this._entities.widget.primaryBtnId)
         let dangerBtn = document.getElementById(this._entities.widget.dangerBtnId)
 
-        let th = this
         this._funHandleClickPrimaryBtn = function () {
             th._handleClickPrimaryBtn()
         }
@@ -180,16 +202,37 @@ export default class CallWidget {
 
         primaryBtn.addEventListener('click', this._funHandleClickPrimaryBtn)
         dangerBtn.addEventListener('click', this._funHandleClickDangerBtn)
+
+        //
+
+        let showRedirectBtn = document.getElementById(this._entities.redirect.selectShowBtnId)
+        let closeRedirectBtn = document.getElementById(this._entities.redirect.selectCloseBtnId)
+        let redirectBtn = document.getElementById(this._entities.redirect.id)
+
+        this._funHandleClickShowRedirectBtn = function () {
+            th._schedule.push(new RedirectScheduleItem('show', 0, th))
+            th._render()
+        }
+        this._funHandleClickHideRedirectBtn = function () {
+            th._schedule.push(new RedirectScheduleItem('hide', 0, th))
+            th._render()
+        }
+        this._funHandleClickRedirectBtn = function () {
+            th._handleRedirect()
+        }
+        showRedirectBtn.addEventListener('click', this._funHandleClickShowRedirectBtn)
+        closeRedirectBtn.addEventListener('click', this._funHandleClickHideRedirectBtn)
+        redirectBtn.addEventListener('click', this._funHandleClickRedirectBtn)
     }
 
-    _handleEvent(name){
+    _handleEvent(name, value){
         const handlers = this._eventHandlers[name]
         // result - нужен чтобы сказать что дальнейшие действия виджета нужно остановить
         let result = true
         for (let i = 0; i < handlers.length; i++) {
             const handler = handlers[i]
             if(handler){
-                let result_ = handler(result)
+                let result_ = handler(value, result)
                 if(typeof result_ === "boolean"){
                     result = result_
                 }
@@ -221,6 +264,15 @@ export default class CallWidget {
     }
 
     /**
+     * Метод, который сработает при клике на кнопке перевести звонок на выбранного оператора
+     * @private
+     */
+    _handleRedirect(){
+        let select = document.getElementById(this._entities.redirect.selectId)
+        this._handleEvent(EVENT_BTN_REDIRECT_CLICK, select.value)
+    }
+
+    /**
      * Функция проходит по очереди и исполняет действия рекурсивно, пока в очереди не останется пунктов
      * @private
      */
@@ -241,46 +293,63 @@ export default class CallWidget {
     }
 
     /**
-     *
-     * @param {String} name - имя элемента, например div, h1, a
-     * @param {{}} attrs - объект с атрибутами
-     * @param {[HTMLElement]|String} children - Массив элементов или textContent
-     * @returns {HTMLElement}
-     * @private
-     */
-    _h(name, attrs = null, children = null){
-        let elem = document.createElement(name)
-
-        if(attrs){
-            for (const attrsKey in attrs) {
-                elem.setAttribute(attrsKey, attrs[attrsKey])
-            }
-        }
-
-        if(children){
-            if (typeof children === 'string' || children instanceof String){
-                elem.textContent = children;
-            }else if(Array.isArray(children)){
-                for (let i = 0; i < children.length; i++) {
-                    elem.appendChild(children[i])
-                }
-            }
-        }
-
-        return elem
-    }
-
-    /**
      * @returns {HTMLElement}
      * @private
      */
     _getTemplate() {
-        const h = this._h
-
         return h('div', {id: this._entities.widget.id, class: 'call-widget'}, [
+            h('div', {
+                id: this._entities.photo.wrapperId,
+                class: 'call-widget__photo',
+                style: 'display: none;'
+            }, [
+                h('img', {
+                    id: this._entities.photo.id,
+                    src: ''
+                }),
+            ]),
             h('div', {id: this._entities.info.id, class: 'call-widget__box-info'}, [
-                h('div', {class: 'call-widget__redirect'}),
-                h('div', {id: this._entities.info.timeId, class: 'call-widget__time'})
+                h('div', {
+                    id: this._entities.redirect.wrapperId,
+                    class: 'call-widget__redirect',
+                    style: 'display: none;'
+                }, [
+                    h('button', {
+                        id: this._entities.redirect.selectShowBtnId,
+                        class: 'call-widget__btn call-widget__btn-redirect',
+                        type: 'button'
+                    }),
+                    h('button', {
+                        id: this._entities.redirect.selectCloseBtnId,
+                        class: 'call-widget__btn call-widget__btn-close',
+                        type: 'button',
+                        style: 'display: none;'
+                    }),
+                    h('span', null, 'Перевести на'),
+                    h('label', {
+                        id: this._entities.redirect.selectWrapperId,
+                        class: 'call-widget__redirect__select-wrapper',
+                        'aria-label': 'Перевести на оператора',
+                        style: 'display: none;'
+                    }, [
+                        h('select', {
+                            class: 'call-widget__select',
+                            id: this._entities.redirect.selectId,
+                        }, [
+                            h('option', {value: '-'}, '-'),
+                        ]),
+                    ]),
+                    h('button', {
+                        class: 'call-widget__btn call-widget__btn-redirect call-widget__btn--warning',
+                        type: 'button',
+                        style: 'display: none;',
+                        id: this._entities.redirect.id,
+                    }),
+                ]),
+                h('div', {
+                    id: this._entities.info.timeId,
+                    class: 'call-widget__time'
+                })
             ]),
             h('div', {id: this._entities.title.wrapperId, class: 'call-widget__box-title'}, [
                 h('div', {id: this._entities.title.id, class: 'call-widget__title'})
@@ -326,7 +395,26 @@ export default class CallWidget {
             widget: { ...defaultEntityVars, id, primaryBtnId: id+'-primary-btn', dangerBtnId: id+'-danger-btn' },
             title: { ...defaultEntityVars, id: id+'-title', wrapperId: id+'-wrapper-title', content: null },
             tel: { ...defaultEntityVars, id: id+'-tel', wrapperId: id+'-wrapper-tel', content: null },
-            info: { ...defaultEntityVars, id: id+'-info', timeId: id+'-time', time: this._settings.startedTime },
+            info: {
+                ...defaultEntityVars,
+                id: id+'-info',
+                timeId: id+'-time',
+                time: this._settings.startedTime,
+            },
+            redirect: {
+                selectShowBtnId: id+'-redirect-select-show-btn',
+                selectCloseBtnId: id+'-redirect-select-close-btn',
+                selectWrapperId: id+'-redirect-select-wrapper',
+                selectId: id+'-redirect-select',
+                id: id+'-redirect-btn',
+                wrapperId: id+'-redirect-wrapper',
+                numbers: []
+            },
+            photo: {
+                ...defaultEntityVars,
+                id: id+'-photo',
+                wrapperId: id+'-wrapper-photo',
+            }
         }
     }
 }

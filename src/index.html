@@ -65,9 +65,18 @@
         // Если вернуть false то можно отключить дальнейшую логику виджета
         // return false
     }
+    /**
+     *
+     * @param value
+     */
+    var handleRedirect = function (value){
+        alert('Редирект на оператора '+value)
+    }
     callWidget.on(callWidget.EVENT_BTN_PRIMARY_CLICK, handleBtnPrimaryClick)
     callWidget.on(callWidget.EVENT_BTN_DANGER_CLICK, handleBtnDangerClick)
+    callWidget.on(callWidget.EVENT_BTN_REDIRECT_CLICK, handleRedirect)
     function handleCall(data){
+        callWidget.setRedirectNumbers(['102', '103', '104', '105', '110', '140'])
         callWidget.call(data)
     }
     function handleSetTime(data){

@@ -25,7 +25,7 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
   font-size: 16px;
   font-family: Arial, Verdana, Tahoma, sans-serif;
   z-index: 100;
-  border-radius: 1.5em;
+  border-radius: 1em;
   background-color: white;
   width: 20em;
   color: #152536;
@@ -60,29 +60,32 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
       max-height: 100%;
     }
   }
+  &__time{
+    margin-left: auto;
+  }
   &__time, &__redirect {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    height: 3em;
+    height: 2em;
     font-size: 1em;
     font-weight: 400;
-    padding: 0.5em;
+    padding: 0 0.5em;
     color: #666;
   }
   &__box-info.show + &__box-title {
-    margin-top: -1em;
+    //margin-top: -1em;
   }
   &__box-phone, &__box-info, &__box-title{
     display: flex;
     position: relative;
     transition-timing-function: ease-in;
-    border-radius: 1.5em;
   }
   &__box-info, &__box-title{
     height: 0;
+    border-radius: 1em;
     &.show{
-      height: 3em;
+      height: 2em;
       background-color: white;
     }
   }
@@ -95,9 +98,9 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
   &__box-phone{
     z-index: 5;
     background-color: white;
+    border-radius: 1em;
   }
   &__redirect{
-    margin-right: auto;
     &__select-wrapper{
       margin-left: 0.3em;
       margin-right: 0.3em;
@@ -116,10 +119,10 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    height: 3em;
+    height: 2em;
     font-size: 1em;
     font-weight: 700;
-    padding: 0.5em;
+    padding: 0 0.5em;
   }
   &__tel-wrapper {
     position: relative;
