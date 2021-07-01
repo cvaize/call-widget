@@ -18,6 +18,16 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
   }
 }
 
+@keyframes call-widget-spin-around {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
 .call-widget {
   position: fixed;
   right: 50px;
@@ -46,18 +56,57 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
     box-sizing: border-box;
   }
 
+  &__photo-sizer{
+    position: relative;
+    display: block;
+    padding-top: 0;
+    transition-timing-function: ease-in;
+  }
+  &__photo.show &__photo-sizer, &__photo.loading &__photo-sizer{
+    padding-top: 3em;
+  }
   &__photo {
-    width: 20em;
-    height: 13em;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    &.show{
+      img{
+        opacity: 1;
+      }
+    }
+    &.loading{
+      img{
+        opacity: 0;
+      }
+      pointer-events: none;
+
+      &:after {
+        animation: call-widget-spin-around 500ms infinite linear;
+        border: 2px solid rgba(#000, 0.5);
+        border-radius: 50%;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        content: "";
+        display: block;
+        height: 1em;
+        width: 1em;
+        position: absolute;
+        left: calc(50% - (1em / 2));
+        top: calc(50% - (1em / 2));
+      }
+    }
     img {
-      width: auto;
-      height: auto;
-      border-radius: 1.5em;
-      max-width: 100%;
-      max-height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 1em;
+      opacity: 0;
+      transition: opacity 0.15s;
+      object-fit: cover;
+      object-position: center;
     }
   }
   &__time{
@@ -76,7 +125,7 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
   &__box-info.show + &__box-title {
     //margin-top: -1em;
   }
-  &__box-phone, &__box-info, &__box-title{
+  &__box-phone, &__box-info, &__box-title, &__photo{
     display: flex;
     position: relative;
     transition-timing-function: ease-in;

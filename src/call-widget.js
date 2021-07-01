@@ -4,6 +4,7 @@ import TitleScheduleItem from "./schedule/items/title";
 import InfoScheduleItem from "./schedule/items/info";
 import RedirectScheduleItem from "./schedule/items/redirect";
 import h from "./utility/h"
+import PhotoScheduleItem from "./schedule/items/photo";
 
 const defaultSettings = {
     id: null,
@@ -77,8 +78,9 @@ export default class CallWidget {
      * Инициировать звонок: покажется виджет и даст возможность ответить на звонок
      * @param {String} tel
      * @param {String} title
+     * @param {String} photo
      */
-    call({tel, title = null}) {
+    call({tel, title = null, photo = null}) {
         if(!tel){
             throw new Error('CallWidget@call обязательно передайте номер телефона')
         }
@@ -88,6 +90,7 @@ export default class CallWidget {
          */
         this._entities.tel.content = tel
         this._entities.title.content = title
+        this._entities.photo.src = photo
 
         /**
          * Заполнение очереди отрисовки в зависимости от данных
@@ -97,6 +100,14 @@ export default class CallWidget {
         if(title) {
             this._schedule.push(new TitleScheduleItem('fill', 0, this))
             this._schedule.push(new TitleScheduleItem('show', 300, this))
+        }else{
+            this._schedule.push(new TitleScheduleItem('hide', 150, this))
+        }
+        if(photo) {
+            this._schedule.push(new PhotoScheduleItem('fill', 0, this))
+            this._schedule.push(new PhotoScheduleItem('show', 300, this))
+        }else{
+            this._schedule.push(new PhotoScheduleItem('hide', 150, this))
         }
 
         /**
@@ -127,11 +138,12 @@ export default class CallWidget {
         // Нужно заблокировать кнопки, свернуть все дополнительный поля и скрыть виджет
         // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
         this._schedule.push(new WidgetScheduleItem('activeDangerBtn', 0, this))
+        this._schedule.push(new PhotoScheduleItem('hide', 150, this))
         this._schedule.push(new InfoScheduleItem('hide', 150, this))
+        this._schedule.push(new RedirectScheduleItem('hide', 0, this))
         this._schedule.push(new TitleScheduleItem('hide', 300, this))
         this._schedule.push(new WidgetScheduleItem('hide', 300, this))
         this._schedule.push(new WidgetScheduleItem('normal', 0, this))
-        this._schedule.push(new RedirectScheduleItem('hide', 0, this))
         this._render()
     }
 
@@ -223,6 +235,16 @@ export default class CallWidget {
         showRedirectBtn.addEventListener('click', this._funHandleClickShowRedirectBtn)
         closeRedirectBtn.addEventListener('click', this._funHandleClickHideRedirectBtn)
         redirectBtn.addEventListener('click', this._funHandleClickRedirectBtn)
+
+        //
+
+        let photo = document.getElementById(this._entities.photo.id)
+
+        photo.onload = function (){
+            console.log('onload', this)
+            th._schedule.push(new PhotoScheduleItem('loaded', 300, th))
+            th._render()
+        }
     }
 
     _handleEvent(name, value){
@@ -301,8 +323,11 @@ export default class CallWidget {
             h('div', {
                 id: this._entities.photo.wrapperId,
                 class: 'call-widget__photo',
-                style: 'display: none;'
             }, [
+                h('div', {
+                    id: this._entities.photo.sizerId,
+                    class: 'call-widget__photo-sizer',
+                }),
                 h('img', {
                     id: this._entities.photo.id,
                     src: ''
@@ -414,6 +439,8 @@ export default class CallWidget {
                 ...defaultEntityVars,
                 id: id+'-photo',
                 wrapperId: id+'-wrapper-photo',
+                sizerId: id+'-sizer-photo',
+                src: ''
             }
         }
     }
