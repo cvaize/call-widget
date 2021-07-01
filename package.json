@@ -1,7 +1,7 @@
 {
   "name": "call-widget",
   "version": "1.0.0",
-  "description": "",
+  "description": "Веб виджет приема звонков",
   "main": "index.js",
   "scripts": {
     "dev": "npm run development",
@@ -12,9 +12,27 @@
     "prod": "npm run production",
     "production": "mix --production"
   },
-  "keywords": [],
   "author": "cvaize",
   "license": "MIT",
+  "browserslist": [
+    "last 2 versions",
+    "not <= 1%",
+    "not IE 10"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvaize/call-widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cvaize/call-widget/issues"
+  },
+  "keywords": [
+    "call-widget",
+    "call widget",
+    "vanilla js",
+    "native javascript",
+    "vanilla javascript"
+  ],
   "devDependencies": {
     "laravel-mix": "^6.0.25",
     "resolve-url-loader": "^4.0.0",
