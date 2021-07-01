@@ -5,6 +5,7 @@
 Изначально данный виджет написан для работы с виджетом звонков от сервиса Zadarma, так как Zadarma не предоставляет 
 виджет приема звонков.
 
+![](screen.gif)
 
 [![NPM Version](https://img.shields.io/npm/v/@cvaize/call-widget.svg?style=flat-square)](https://www.npmjs.com/package/@cvaize/call-widget)
 
