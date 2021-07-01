@@ -172,15 +172,38 @@ export default class CallWidget {
             element = selector
         }
 
-        let template = this._getTemplate()
+        let template = document.getElementById(this._entities.widget.id)
+        if(!template){
+            template = this._getTemplate()
 
-        element.appendChild(template)
+            element.appendChild(template)
 
-        requestAnimationFrame(() => {
-            this._attachEvents()
-        })
+            requestAnimationFrame(() => {
+                this._attachEvents()
+            })
+        }
 
         return template
+    }
+
+    /**
+     * Функция удаляющая шаблон
+     */
+    destroy() {
+        this._schedule = []
+        this._detachEvents()
+
+        let element = document.getElementById(this._entities.widget.id)
+
+        if(element){
+            if (!('remove' in Element.prototype)) {
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+            }else{
+                element.remove();
+            }
+        }
     }
 
     on(name, fun) {
@@ -233,10 +256,27 @@ export default class CallWidget {
         let photo = document.getElementById(this._entities.photo.id)
 
         photo.onload = function (){
-            console.log('onload', this)
             th._schedule.push(new PhotoScheduleItem('loaded', 300, th))
             th._render()
         }
+    }
+
+    _detachEvents() {
+        let primaryBtn = document.getElementById(this._entities.widget.primaryBtnId)
+        let dangerBtn = document.getElementById(this._entities.widget.dangerBtnId)
+
+        primaryBtn.removeEventListener('click', this._funHandleClickPrimaryBtn)
+        dangerBtn.removeEventListener('click', this._funHandleClickDangerBtn)
+
+        //
+
+        let showRedirectBtn = document.getElementById(this._entities.redirect.selectShowBtnId)
+        let closeRedirectBtn = document.getElementById(this._entities.redirect.selectCloseBtnId)
+        let redirectBtn = document.getElementById(this._entities.redirect.id)
+
+        showRedirectBtn.removeEventListener('click', this._funHandleClickShowRedirectBtn)
+        closeRedirectBtn.removeEventListener('click', this._funHandleClickHideRedirectBtn)
+        redirectBtn.removeEventListener('click', this._funHandleClickRedirectBtn)
     }
 
     _handleEvent(name, value){
@@ -293,7 +333,6 @@ export default class CallWidget {
     _render() {
         let item = this._schedule.shift()
         if(item){
-            console.log(item, item.action, item.time)
             if(item.time){
                 requestAnimationFrame(() => {
                     setTimeout(() => {this._render()}, item.time)

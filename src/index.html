@@ -20,7 +20,7 @@
     <h2>The widget should appear on the bottom right =)</h2>
 
     <div>
-        <button onclick="handleCall({tel: '+79998887766', title: 'Орлов Дмитрий Александрович', photo: 'https://via.placeholder.com/320x500'})">
+        <button onclick="handleCall({tel: '+79998887766', title: 'Орлов Дмитрий Александрович', photo: 'https://via.placeholder.com/320x200'})">
             Звонок пользователя Орлов Дмитрий Александрович c номера +79998887766
         </button>
         <br>
@@ -45,6 +45,16 @@
         <button onclick="handleSetTime('00:04:54')">
             Во время звонка установить время 00:04:54
         </button>
+        <br>
+        <br>
+        <button onclick="destroy()">
+            Разрушить виджет
+        </button>
+        <br>
+        <br>
+        <button onclick="init()">
+            Создать виджет
+        </button>
     </div>
 </div>
 
@@ -52,6 +62,7 @@
 
 <script>
     var callWidget = new CallWidget()
+    // Изначально вы должны распечатать шаблон на странице
     callWidget.print()
     var handleBtnPrimaryClick = function (){
         // alert('Клик по кнопке принять звонок')
@@ -82,6 +93,12 @@
     function handleSetTime(data){
         callWidget.setTime(data)
     }
+    function init(){
+        callWidget.print()
+    }
+    function destroy(){
+        callWidget.destroy()
+    }
 </script>
 
 <!--START - Шаблон для наглядности-->
@@ -93,7 +110,7 @@
         <div class="call-widget__redirect">
             <button class="call-widget__btn call-widget__btn-redirect"></button>
             <button class="call-widget__btn call-widget__btn-close" style="display: none"></button>
-            Перевести на
+            <span>Перевести на</span>
             <label class="call-widget__redirect__select-wrapper" aria-label="Перевести на оператора" style="display: none">
                 <select class="call-widget__select">
                     <option value="102">102</option>
