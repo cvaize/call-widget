@@ -12,14 +12,6 @@ const defaultSettings = {
     startedTime: '00:00:00',
 }
 
-const defaultEntityVars = {
-    loading: false,
-    show: false,
-    showing: false,
-    showed: true,
-    id: null,
-}
-
 export const EVENT_BTN_PRIMARY_CLICK = 'btn_primary:click'
 export const EVENT_BTN_DANGER_CLICK = 'btn_danger:click'
 export const EVENT_BTN_REDIRECT_CLICK = 'btn_redirect:click'
@@ -417,11 +409,10 @@ export default class CallWidget {
         const id = this._settings.id
 
         return {
-            widget: { ...defaultEntityVars, id, primaryBtnId: id+'-primary-btn', dangerBtnId: id+'-danger-btn' },
-            title: { ...defaultEntityVars, id: id+'-title', wrapperId: id+'-wrapper-title', content: null },
-            tel: { ...defaultEntityVars, id: id+'-tel', wrapperId: id+'-wrapper-tel', content: null },
+            widget: { id, primaryBtnId: id+'-primary-btn', dangerBtnId: id+'-danger-btn' },
+            title: { id: id+'-title', wrapperId: id+'-wrapper-title', content: null },
+            tel: { id: id+'-tel', wrapperId: id+'-wrapper-tel', content: null },
             info: {
-                ...defaultEntityVars,
                 id: id+'-info',
                 timeId: id+'-time',
                 time: this._settings.startedTime,
@@ -436,7 +427,6 @@ export default class CallWidget {
                 numbers: []
             },
             photo: {
-                ...defaultEntityVars,
                 id: id+'-photo',
                 wrapperId: id+'-wrapper-photo',
                 sizerId: id+'-sizer-photo',
