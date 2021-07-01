@@ -1,6 +1,6 @@
 {
   "name": "@cvaize/call-widget",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Веб виджет приема звонков",
   "main": "src/call-widget.js",
   "scripts": {
