@@ -150,15 +150,19 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
     border-radius: 1em;
   }
   &__redirect{
+    padding: 0 0 0 .5em;
     &__select-wrapper{
       margin-left: 0.3em;
       margin-right: 0.3em;
+      margin-bottom: 0;
     }
   }
   &__select{
     border: 1px solid #ced4da;
     border-radius: 1em;
     background-color: white;
+    max-width: 4em;
+    font-size: 1em;
     &:focus{
       outline: none;
       box-shadow: 0 0 0 1px #15253680;
@@ -292,5 +296,13 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
         transform: rotate(135deg);
       }
     }
+  }
+}
+
+@media (max-width: 450px) {
+  .call-widget{
+    font-size: 12px;
+    right: 20px;
+    bottom: 20px;
   }
 }
