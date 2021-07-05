@@ -1,5 +1,8 @@
 {
     "/call-widget.js": "/call-widget.js",
-    "/call-widget.css": "/call-widget.css",
+    "/call-widget-theme-default.js": "/call-widget-theme-default.js",
+    "/call-widget-theme-mobile.js": "/call-widget-theme-mobile.js",
+    "/call-widget.mobile.css": "/call-widget.mobile.css",
+    "/call-widget.default.css": "/call-widget.default.css",
     "/index.html": "/index.html"
 }

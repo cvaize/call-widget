@@ -6,7 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Call Widget Demo</title>
-    <link rel="stylesheet" href="call-widget.css">
+    <link rel="stylesheet" href="call-widget.default.css">
+    <link rel="stylesheet" href="call-widget.mobile.css">
     <style>
         body{
             background-color: #F2F4F6;
@@ -55,13 +56,23 @@
         <button onclick="init()">
             Создать виджет
         </button>
+        <br>
+        <br>
+        <button onclick="initTheme(CallWidgetDefaultTheme)">
+            Создать виджет c темой по умолчанию
+        </button>
+        <button onclick="initTheme(CallWidgetMobileTheme)">
+            Создать виджет c мобильной темой
+        </button>
     </div>
 </div>
 
 <script src="call-widget.js"></script>
+<script src="call-widget-theme-default.js"></script>
+<script src="call-widget-theme-mobile.js"></script>
 
 <script>
-    var callWidget = new CallWidget()
+    var callWidget = CallWidget.makeCallWidget(CallWidgetMobileTheme)
     // Изначально вы должны распечатать шаблон на странице
     callWidget.print()
     var handleBtnPrimaryClick = function (){
@@ -83,9 +94,9 @@
     var handleRedirect = function (value){
         alert('Редирект на оператора '+value)
     }
-    callWidget.on(callWidget.EVENT_BTN_PRIMARY_CLICK, handleBtnPrimaryClick)
-    callWidget.on(callWidget.EVENT_BTN_DANGER_CLICK, handleBtnDangerClick)
-    callWidget.on(callWidget.EVENT_BTN_REDIRECT_CLICK, handleRedirect)
+    callWidget.on(CallWidget.EVENT_BTN_PRIMARY_CLICK, handleBtnPrimaryClick)
+    callWidget.on(CallWidget.EVENT_BTN_DANGER_CLICK, handleBtnDangerClick)
+    callWidget.on(CallWidget.EVENT_BTN_REDIRECT_CLICK, handleRedirect)
     function handleCall(data){
         callWidget.setRedirectNumbers(['102', '103', '104', '105', '110', '140'])
         callWidget.call(data)
@@ -98,6 +109,10 @@
     }
     function destroy(){
         callWidget.destroy()
+    }
+    function initTheme(theme) {
+        callWidget.destroy()
+        callWidget = CallWidget.makeCallWidget(theme)
     }
 </script>
 

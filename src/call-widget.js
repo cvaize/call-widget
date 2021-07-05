@@ -1,11 +1,3 @@
-import WidgetScheduleItem from "./schedule/items/widget";
-import TelScheduleItem from "./schedule/items/tel";
-import TitleScheduleItem from "./schedule/items/title";
-import InfoScheduleItem from "./schedule/items/info";
-import RedirectScheduleItem from "./schedule/items/redirect";
-import h from "./utility/h"
-import PhotoScheduleItem from "./schedule/items/photo";
-
 const defaultSettings = {
     id: null,
     selector: 'body',
@@ -16,278 +8,84 @@ export const EVENT_BTN_PRIMARY_CLICK = 'btn_primary:click'
 export const EVENT_BTN_DANGER_CLICK = 'btn_danger:click'
 export const EVENT_BTN_REDIRECT_CLICK = 'btn_redirect:click'
 
-const events = [EVENT_BTN_PRIMARY_CLICK, EVENT_BTN_DANGER_CLICK, EVENT_BTN_REDIRECT_CLICK]
+export const makeCallWidget = function (theme, settings = {}) {
+    if (!settings.id) settings.id = 'call-widget-' + Math.round(Math.random() * 10e6)
 
-export default class CallWidget {
     /**
      * @private {{}} - Настройки
      */
-    _settings
+    const _settings = Object.assign(defaultSettings, settings)
+    /**
+     * @public {String} - Главный id компонента
+     */
+    const id = _settings.id
     /**
      * @private {{}} - Параметры сущностей имеющихся в CallWidget
      */
-    _entities
+    let _entities = {
+        widget: {id, primaryBtnId: id + '-primary-btn', dangerBtnId: id + '-danger-btn'},
+        title: {id: id + '-title', wrapperId: id + '-wrapper-title', content: null},
+        tel: {id: id + '-tel', wrapperId: id + '-wrapper-tel', content: null},
+        info: {
+            id: id + '-info',
+            timeId: id + '-time',
+            time: _settings.startedTime,
+        },
+        redirect: {
+            selectShowBtnId: id + '-redirect-select-show-btn',
+            selectCloseBtnId: id + '-redirect-select-close-btn',
+            selectWrapperId: id + '-redirect-select-wrapper',
+            selectId: id + '-redirect-select',
+            id: id + '-redirect-btn',
+            wrapperId: id + '-redirect-wrapper',
+            numbers: []
+        },
+        photo: {
+            id: id + '-photo',
+            wrapperId: id + '-wrapper-photo',
+            sizerId: id + '-sizer-photo',
+            src: ''
+        }
+    }
     /**
-     * @private {[ScheduleItem]} - Очередь для управления отрисовкой, массив объектов
+     * @private {[{}]} - Очередь для управления отрисовкой, массив объектов
      */
-    _schedule
-    /**
-     * @private - сюда помещается функция HandleClickPrimaryBtn, чтобы отвязать её по этому адресу
-     */
-    _funHandleClickPrimaryBtn
-    /**
-     * @private - сюда помещается функция HandleClickDangerBtn, чтобы отвязать её по этому адресу
-     */
-    _funHandleClickDangerBtn
-
+    let _schedule = []
     /**
      * @private {{}} - объект со слушателями, добавляются через функцию CallWidget.on() и удаляются через CallWidget.off()
      */
-    _eventHandlers
-
-    _funHandleClickShowRedirectBtn
-    _funHandleClickHideRedirectBtn
-    _funHandleClickRedirectBtn
-
-    EVENT_BTN_PRIMARY_CLICK
-    EVENT_BTN_DANGER_CLICK
-    EVENT_BTN_REDIRECT_CLICK
-
-    constructor(settings = {}) {
-
-        this.EVENT_BTN_PRIMARY_CLICK = EVENT_BTN_PRIMARY_CLICK
-        this.EVENT_BTN_DANGER_CLICK = EVENT_BTN_DANGER_CLICK
-        this.EVENT_BTN_REDIRECT_CLICK = EVENT_BTN_REDIRECT_CLICK
-
-        if(!settings.id) settings.id = 'call-widget-'+Math.round(Math.random() * 10e6)
-
-        this._settings = Object.assign(defaultSettings, settings)
-
-        this._setStartParams()
+    let _eventHandlers = {
+        [EVENT_BTN_PRIMARY_CLICK]: [],
+        [EVENT_BTN_DANGER_CLICK]: [],
+        [EVENT_BTN_REDIRECT_CLICK]: [],
     }
 
     /**
-     * Инициировать звонок: покажется виджет и даст возможность ответить на звонок
-     * @param {String} tel
-     * @param {String} title
-     * @param {String} photo
+     * @public {{}}
      */
-    call({tel, title = null, photo = null}) {
-        if(!tel){
-            throw new Error('CallWidget@call обязательно передайте номер телефона')
-        }
+    const th = {_settings, _schedule, _entities}
 
-        /**
-         * Заполнение данными
-         */
-        this._entities.tel.content = tel
-        this._entities.title.content = title
-        this._entities.photo.src = photo
-
-        /**
-         * Заполнение очереди отрисовки в зависимости от данных
-         */
-        this._schedule.push(new TelScheduleItem('fill', 0, this))
-        this._schedule.push(new WidgetScheduleItem('show', 300, this))
-        if(title) {
-            this._schedule.push(new TitleScheduleItem('fill', 0, this))
-            this._schedule.push(new TitleScheduleItem('show', 300, this))
-        }else{
-            this._schedule.push(new TitleScheduleItem('hide', 150, this))
-        }
-        if(photo) {
-            this._schedule.push(new PhotoScheduleItem('fill', 0, this))
-            this._schedule.push(new PhotoScheduleItem('show', 300, this))
-        }else{
-            this._schedule.push(new PhotoScheduleItem('hide', 150, this))
-        }
-
-        /**
-         * Вызов функции рендера очереди
-         */
-        this._render()
-    }
-
-    /**
-     * Ответить на звонок
-     */
-    answerCall(){
-        // Нужно установить начальное время, чтобы показать его, а потом уже пользователь будет его устанавливать
-        this._entities.info.time = this._settings.startedTime
-
-        // Нужно заблокировать кнопку "принять звонок" и установить активный статус кнопке "принять звонок"
-        // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
-        this._schedule.push(new WidgetScheduleItem('activePrimaryBtn', 0, this))
-        this._schedule.push(new InfoScheduleItem('fill', 0, this))
-        this._schedule.push(new InfoScheduleItem('show', 150, this))
-        this._render()
-    }
-
-    /**
-     * Положить трубку
-     */
-    hangUpCall() {
-        // Нужно заблокировать кнопки, свернуть все дополнительный поля и скрыть виджет
-        // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
-        this._schedule.push(new WidgetScheduleItem('activeDangerBtn', 0, this))
-        this._schedule.push(new PhotoScheduleItem('hide', 150, this))
-        this._schedule.push(new InfoScheduleItem('hide', 150, this))
-        this._schedule.push(new RedirectScheduleItem('hide', 0, this))
-        this._schedule.push(new TitleScheduleItem('hide', 300, this))
-        this._schedule.push(new WidgetScheduleItem('hide', 300, this))
-        this._schedule.push(new WidgetScheduleItem('normal', 0, this))
-        this._render()
-    }
-
-    /**
-     * Установка времени, по умолчанию формат 00:00:00
-     */
-    setTime(time) {
-        this._entities.info.time = time
-        this._schedule.push(new InfoScheduleItem('fill', 0, this))
-        this._render()
-    }
-
-    /**
-     * Установка номеров телефонов для выбора редиректа
-     * @param {[String]} numbers
-     */
-    setRedirectNumbers(numbers) {
-        this._entities.redirect.numbers = numbers
-        this._schedule.push(new RedirectScheduleItem('fill', 0, this))
-        this._render()
-    }
-
-    /**
-     * Функция распечатывающая шаблон
-     * @param selector - Селектор или элемент
-     */
-    print(selector = null) {
-        selector = selector || this._settings.selector
-
-        let element
-        if (typeof selector === 'string' || selector instanceof String){
-            element = document.querySelector(selector)
-        }else{
-            element = selector
-        }
-
-        let template = document.getElementById(this._entities.widget.id)
-        if(!template){
-            template = this._getTemplate()
-
-            element.appendChild(template)
-
-            requestAnimationFrame(() => {
-                this._attachEvents()
-            })
-        }
-
-        return template
-    }
-
-    /**
-     * Функция удаляющая шаблон
-     */
-    destroy() {
-        this._schedule = []
-        this._detachEvents()
-
-        let element = document.getElementById(this._entities.widget.id)
-
-        if(element){
-            if (!('remove' in Element.prototype)) {
-                if (element.parentNode) {
-                    element.parentNode.removeChild(element);
-                }
-            }else{
-                element.remove();
+    const ScheduleItem = function (action, time) {
+        return {
+            time,
+            render() {
+                theme[action](th, time);
             }
         }
     }
+    /**
+     * ---------------------- Приватные функции ----------------------
+     */
 
-    on(name, fun) {
-        this._eventHandlers[name].push(fun)
-    }
-
-    off(name, fun) {
-        this._eventHandlers[name] = this._eventHandlers[name].filter(fun_ => fun_ !== fun)
-    }
-
-    _attachEvents() {
-        let th = this
-
-        let primaryBtn = document.getElementById(this._entities.widget.primaryBtnId)
-        let dangerBtn = document.getElementById(this._entities.widget.dangerBtnId)
-
-        this._funHandleClickPrimaryBtn = function () {
-            th._handleClickPrimaryBtn()
-        }
-        this._funHandleClickDangerBtn = function () {
-            th._handleClickDangerBtn()
-        }
-
-        primaryBtn.addEventListener('click', this._funHandleClickPrimaryBtn)
-        dangerBtn.addEventListener('click', this._funHandleClickDangerBtn)
-
-        //
-
-        let showRedirectBtn = document.getElementById(this._entities.redirect.selectShowBtnId)
-        let closeRedirectBtn = document.getElementById(this._entities.redirect.selectCloseBtnId)
-        let redirectBtn = document.getElementById(this._entities.redirect.id)
-
-        this._funHandleClickShowRedirectBtn = function () {
-            th._schedule.push(new RedirectScheduleItem('show', 0, th))
-            th._render()
-        }
-        this._funHandleClickHideRedirectBtn = function () {
-            th._schedule.push(new RedirectScheduleItem('hide', 0, th))
-            th._render()
-        }
-        this._funHandleClickRedirectBtn = function () {
-            th._handleRedirect()
-        }
-        showRedirectBtn.addEventListener('click', this._funHandleClickShowRedirectBtn)
-        closeRedirectBtn.addEventListener('click', this._funHandleClickHideRedirectBtn)
-        redirectBtn.addEventListener('click', this._funHandleClickRedirectBtn)
-
-        //
-
-        let photo = document.getElementById(this._entities.photo.id)
-
-        photo.onload = function (){
-            th._schedule.push(new PhotoScheduleItem('loaded', 300, th))
-            th._render()
-        }
-    }
-
-    _detachEvents() {
-        let primaryBtn = document.getElementById(this._entities.widget.primaryBtnId)
-        let dangerBtn = document.getElementById(this._entities.widget.dangerBtnId)
-
-        primaryBtn.removeEventListener('click', this._funHandleClickPrimaryBtn)
-        dangerBtn.removeEventListener('click', this._funHandleClickDangerBtn)
-
-        //
-
-        let showRedirectBtn = document.getElementById(this._entities.redirect.selectShowBtnId)
-        let closeRedirectBtn = document.getElementById(this._entities.redirect.selectCloseBtnId)
-        let redirectBtn = document.getElementById(this._entities.redirect.id)
-
-        showRedirectBtn.removeEventListener('click', this._funHandleClickShowRedirectBtn)
-        closeRedirectBtn.removeEventListener('click', this._funHandleClickHideRedirectBtn)
-        redirectBtn.removeEventListener('click', this._funHandleClickRedirectBtn)
-    }
-
-    _handleEvent(name, value){
-        const handlers = this._eventHandlers[name]
+    const _handleEvent = function (name, value) {
+        const handlers = _eventHandlers[name]
         // result - нужен чтобы сказать что дальнейшие действия виджета нужно остановить
         let result = true
         for (let i = 0; i < handlers.length; i++) {
             const handler = handlers[i]
-            if(handler){
+            if (handler) {
                 let result_ = handler(value, result)
-                if(typeof result_ === "boolean"){
+                if (typeof result_ === "boolean") {
                     result = result_
                 }
             }
@@ -299,10 +97,10 @@ export default class CallWidget {
      * Метод, который сработает при клике по кнопке принять звонок
      * @private
      */
-    _handleClickPrimaryBtn(){
-        const result = this._handleEvent(EVENT_BTN_PRIMARY_CLICK)
-        if(result){
-            this.answerCall()
+    const _handleClickPrimaryBtn = function () {
+        const result = _handleEvent(EVENT_BTN_PRIMARY_CLICK)
+        if (result) {
+            answerCall()
         }
     }
 
@@ -310,10 +108,10 @@ export default class CallWidget {
      * Метод, который сработает при клике по кнопке положить звонок
      * @private
      */
-    _handleClickDangerBtn(){
-        const result = this._handleEvent(EVENT_BTN_DANGER_CLICK)
-        if(result){
-            this.hangUpCall()
+    const _handleClickDangerBtn = function () {
+        const result = _handleEvent(EVENT_BTN_DANGER_CLICK)
+        if (result) {
+            hangUpCall()
         }
     }
 
@@ -321,156 +119,241 @@ export default class CallWidget {
      * Метод, который сработает при клике на кнопке перевести звонок на выбранного оператора
      * @private
      */
-    _handleRedirect(){
-        let select = document.getElementById(this._entities.redirect.selectId)
-        this._handleEvent(EVENT_BTN_REDIRECT_CLICK, select.value)
+    const _handleRedirect = function () {
+        let select = document.getElementById(_entities.redirect.selectId)
+        _handleEvent(EVENT_BTN_REDIRECT_CLICK, select.value)
+    }
+
+    const _handleClickShowRedirectBtn = function () {
+        _schedule.push(ScheduleItem('showRedirect', 0))
+        _render()
+    }
+
+    const _handleClickHideRedirectBtn = function () {
+        _schedule.push(ScheduleItem('hideRedirect', 0))
+        _render()
+    }
+
+    const _attachEvents = function () {
+        let primaryBtn = document.getElementById(_entities.widget.primaryBtnId)
+        let dangerBtn = document.getElementById(_entities.widget.dangerBtnId)
+
+        primaryBtn.addEventListener('click', _handleClickPrimaryBtn)
+        dangerBtn.addEventListener('click', _handleClickDangerBtn)
+
+        //
+
+        let showRedirectBtn = document.getElementById(_entities.redirect.selectShowBtnId)
+        let closeRedirectBtn = document.getElementById(_entities.redirect.selectCloseBtnId)
+        let redirectBtn = document.getElementById(_entities.redirect.id)
+
+        showRedirectBtn.addEventListener('click', _handleClickShowRedirectBtn)
+        closeRedirectBtn.addEventListener('click', _handleClickHideRedirectBtn)
+        redirectBtn.addEventListener('click', _handleRedirect)
+
+        //
+
+        let photo = document.getElementById(_entities.photo.id)
+
+        photo.onload = function () {
+            _schedule.push(ScheduleItem('loadedPhoto', 300))
+            _render()
+        }
+    }
+
+    const _detachEvents = function () {
+        let primaryBtn = document.getElementById(_entities.widget.primaryBtnId)
+        let dangerBtn = document.getElementById(_entities.widget.dangerBtnId)
+
+        primaryBtn.removeEventListener('click', _handleClickPrimaryBtn)
+        dangerBtn.removeEventListener('click', _handleClickDangerBtn)
+
+        //
+
+        let showRedirectBtn = document.getElementById(_entities.redirect.selectShowBtnId)
+        let closeRedirectBtn = document.getElementById(_entities.redirect.selectCloseBtnId)
+        let redirectBtn = document.getElementById(_entities.redirect.id)
+
+        showRedirectBtn.removeEventListener('click', _handleClickShowRedirectBtn)
+        closeRedirectBtn.removeEventListener('click', _handleClickHideRedirectBtn)
+        redirectBtn.removeEventListener('click', _handleRedirect)
+
+        //
+
+        let photo = document.getElementById(_entities.photo.id)
+
+        photo.onload = undefined
     }
 
     /**
      * Функция проходит по очереди и исполняет действия рекурсивно, пока в очереди не останется пунктов
      * @private
      */
-    _render() {
-        let item = this._schedule.shift()
-        if(item){
-            if(item.time){
+    const _render = function () {
+        let item = _schedule.shift()
+        if (item) {
+            if (item.time) {
                 requestAnimationFrame(() => {
-                    setTimeout(() => {this._render()}, item.time)
+                    setTimeout(_render, item.time)
                     item.render()
                 })
-            }else{
+            } else {
                 item.render()
-                this._render()
+                _render()
             }
         }
     }
 
     /**
-     * @returns {HTMLElement}
-     * @private
+     * ---------------------- Публичные функции ----------------------
      */
-    _getTemplate() {
-        return h('div', {id: this._entities.widget.id, class: 'call-widget'}, [
-            h('div', {
-                id: this._entities.photo.wrapperId,
-                class: 'call-widget__photo',
-            }, [
-                h('div', {
-                    id: this._entities.photo.sizerId,
-                    class: 'call-widget__photo-sizer',
-                }),
-                h('img', {
-                    id: this._entities.photo.id,
-                    src: ''
-                }),
-            ]),
-            h('div', {id: this._entities.info.id, class: 'call-widget__box-info'}, [
-                h('div', {
-                    id: this._entities.redirect.wrapperId,
-                    class: 'call-widget__redirect',
-                    style: 'display: none;'
-                }, [
-                    h('button', {
-                        id: this._entities.redirect.selectShowBtnId,
-                        class: 'call-widget__btn call-widget__btn-redirect',
-                        type: 'button'
-                    }),
-                    h('button', {
-                        id: this._entities.redirect.selectCloseBtnId,
-                        class: 'call-widget__btn call-widget__btn-close',
-                        type: 'button',
-                        style: 'display: none;'
-                    }),
-                    h('span', null, 'Перевести на'),
-                    h('label', {
-                        id: this._entities.redirect.selectWrapperId,
-                        class: 'call-widget__redirect__select-wrapper',
-                        'aria-label': 'Перевести на оператора',
-                        style: 'display: none;'
-                    }, [
-                        h('select', {
-                            class: 'call-widget__select',
-                            id: this._entities.redirect.selectId,
-                        }, [
-                            h('option', {value: '-'}, '-'),
-                        ]),
-                    ]),
-                    h('button', {
-                        class: 'call-widget__btn call-widget__btn-redirect call-widget__btn--warning',
-                        type: 'button',
-                        style: 'display: none;',
-                        id: this._entities.redirect.id,
-                    }),
-                ]),
-                h('div', {
-                    id: this._entities.info.timeId,
-                    class: 'call-widget__time'
-                })
-            ]),
-            h('div', {id: this._entities.title.wrapperId, class: 'call-widget__box-title'}, [
-                h('div', {id: this._entities.title.id, class: 'call-widget__title'})
-            ]),
-            h('div', {class: 'call-widget__box-phone'}, [
-                h('div', {id: this._entities.tel.wrapperId, class: 'call-widget__tel-wrapper'}, [
-                    h('div', {id: this._entities.tel.id, class: 'call-widget__tel'})
-                ]),
-                h('button', {
-                    id: this._entities.widget.dangerBtnId,
-                    class: 'call-widget__btn call-widget__btn-circle call-widget__btn-circle--danger',
-                    type: 'button'
-                }),
-                h('button', {
-                    id: this._entities.widget.primaryBtnId,
-                    class: 'call-widget__btn call-widget__btn-circle call-widget__btn-circle--primary',
-                    type: 'button'
-                })
-            ])
-        ])
+    /**
+     * Инициировать звонок: покажется виджет и даст возможность ответить на звонок
+     * @param {String} tel
+     * @param {String} title
+     * @param {String} photo
+     */
+    const call = function ({tel, title = null, photo = null}) {
+        if (!tel) {
+            throw new Error('CallWidget@call обязательно передайте номер телефона')
+        }
+
+        /**
+         * Заполнение данными
+         */
+        _entities.tel.content = tel
+        _entities.title.content = title
+        _entities.photo.src = photo
+
+        /**
+         * Заполнение очереди отрисовки в зависимости от данных
+         */
+        _schedule.push(ScheduleItem('fillTel', 0))
+        _schedule.push(ScheduleItem('showWidget', 300))
+        if (title) {
+            _schedule.push(ScheduleItem('fillTitle', 0))
+            _schedule.push(ScheduleItem('showTitle', 300))
+        } else {
+            _schedule.push(ScheduleItem('hideTitle', 150))
+        }
+        if (photo) {
+            _schedule.push(ScheduleItem('fillPhoto', 0))
+            _schedule.push(ScheduleItem('showPhoto', 300))
+        } else {
+            _schedule.push(ScheduleItem('hidePhoto', 150))
+        }
+
+        /**
+         * Вызов функции рендера очереди
+         */
+        _render()
     }
 
     /**
-     * Функция устанавливающая начальные параметры
-     * @private
+     * Ответить на звонок
      */
-    _setStartParams() {
-        this._entities = this._getEntities()
+    const answerCall = function () {
+        // Нужно установить начальное время, чтобы показать его, а потом уже пользователь будет его устанавливать
+        _entities.info.time = _settings.startedTime
 
-        this._schedule = []
-
-        this._eventHandlers = {}
-        for (let i = 0; i < events.length; i++) {
-            let event = events[i]
-            this._eventHandlers[event] = []
-        }
+        // Нужно заблокировать кнопку "принять звонок" и установить активный статус кнопке "принять звонок"
+        // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
+        _schedule.push(ScheduleItem('activePrimaryBtn', 0))
+        _schedule.push(ScheduleItem('fillInfo', 0))
+        _schedule.push(ScheduleItem('showInfo', 150))
+        _render()
     }
 
-    _getEntities() {
-        const id = this._settings.id
+    /**
+     * Положить трубку
+     */
+    const hangUpCall = function () {
+        // Нужно заблокировать кнопки, свернуть все дополнительный поля и скрыть виджет
+        // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
+        _schedule.push(ScheduleItem('activeDangerBtn', 0))
+        _schedule.push(ScheduleItem('hidePhoto', 150))
+        _schedule.push(ScheduleItem('hideInfo', 150))
+        _schedule.push(ScheduleItem('hideRedirect', 0))
+        _schedule.push(ScheduleItem('hideTitle', 300))
+        _schedule.push(ScheduleItem('hideWidget', 300))
+        _schedule.push(ScheduleItem('normalWidget', 0))
+        _render()
+    }
 
-        return {
-            widget: { id, primaryBtnId: id+'-primary-btn', dangerBtnId: id+'-danger-btn' },
-            title: { id: id+'-title', wrapperId: id+'-wrapper-title', content: null },
-            tel: { id: id+'-tel', wrapperId: id+'-wrapper-tel', content: null },
-            info: {
-                id: id+'-info',
-                timeId: id+'-time',
-                time: this._settings.startedTime,
-            },
-            redirect: {
-                selectShowBtnId: id+'-redirect-select-show-btn',
-                selectCloseBtnId: id+'-redirect-select-close-btn',
-                selectWrapperId: id+'-redirect-select-wrapper',
-                selectId: id+'-redirect-select',
-                id: id+'-redirect-btn',
-                wrapperId: id+'-redirect-wrapper',
-                numbers: []
-            },
-            photo: {
-                id: id+'-photo',
-                wrapperId: id+'-wrapper-photo',
-                sizerId: id+'-sizer-photo',
-                src: ''
+    /**
+     * Установка времени, по умолчанию формат 00:00:00
+     */
+    const setTime = function (time) {
+        _entities.info.time = time
+        _schedule.push(ScheduleItem('fillInfo', 0))
+        _render()
+    }
+
+    /**
+     * Установка номеров телефонов для выбора редиректа
+     * @param {[String]} numbers
+     */
+    const setRedirectNumbers = function (numbers) {
+        _entities.redirect.numbers = numbers
+        _schedule.push(ScheduleItem('fillRedirect', 0))
+        _render()
+    }
+
+    /**
+     * Функция распечатывающая шаблон
+     * @param selector - Селектор или элемент
+     */
+    const print = function (selector = null) {
+        selector = selector || _settings.selector
+
+        let element
+        if (typeof selector === 'string' || selector instanceof String) {
+            element = document.querySelector(selector)
+        } else {
+            element = selector
+        }
+
+        let template = document.getElementById(_entities.widget.id)
+        if (!template) {
+            template = theme.getTemplate(_entities)
+
+            element.appendChild(template)
+
+            requestAnimationFrame(() => {
+                _attachEvents()
+            })
+        }
+
+        return template
+    }
+
+    /**
+     * Функция удаляющая шаблон
+     */
+    const destroy = function () {
+        _schedule = []
+        _detachEvents()
+
+        let element = document.getElementById(_entities.widget.id)
+
+        if (element) {
+            if (!('remove' in Element.prototype)) {
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+            } else {
+                element.remove();
             }
         }
     }
+
+    const on = function (name, fun) {
+        _eventHandlers[name].push(fun)
+    }
+
+    const off = function (name, fun) {
+        _eventHandlers[name] = _eventHandlers[name].filter(fun_ => fun_ !== fun)
+    }
+
+    return {call, answerCall, hangUpCall, setTime, setRedirectNumbers, print, destroy, on, off}
 }

@@ -1,0 +1,308 @@
+$call-widget-mobile-primary: #00A35B;
+$call-widget-mobile-warning: #ffc107;
+$call-widget-mobile-danger: #E32636;
+$call-widget-mobile-tel-icon-color: white;
+$call-widget-mobile-shadow-from: #00A35B80;
+$call-widget-mobile-shadow-to: #00A35B00;
+$call-widget-mobile-shadow-radius: 1em;
+$call-widget-mobile-tel-icon: url("data:image/svg+xml,%3Csvg width='1408' height='1408' viewBox='0 0 1408 1408' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1408 1112C1408 1130 1404.67 1153.5 1398 1182.5C1391.33 1211.5 1384.33 1234.33 1377 1251C1363 1284.33 1322.33 1319.67 1255 1357C1192.33 1391 1130.33 1408 1069 1408C1051 1408 1033.5 1406.83 1016.5 1404.5C999.5 1402.17 980.333 1398 959 1392C937.667 1386 921.833 1381.17 911.5 1377.5C901.167 1373.83 882.667 1367 856 1357C829.333 1347 813 1341 807 1339C741.667 1315.67 683.333 1288 632 1256C546.667 1203.33 458.5 1131.5 367.5 1040.5C276.5 949.5 204.667 861.333 152 776C120 724.667 92.3333 666.333 69 601C67 595 61 578.667 51 552C41 525.333 34.1667 506.833 30.5 496.5C26.8333 486.167 22 470.333 16 449C10 427.667 5.83333 408.5 3.5 391.5C1.16667 374.5 0 357 0 339C0 277.667 17 215.667 51 153C88.3333 85.6667 123.667 45 157 31C173.667 23.6667 196.5 16.6667 225.5 10C254.5 3.33333 278 0 296 0C305.333 0 312.333 1 317 3C329 7 346.667 32.3333 370 79C377.333 91.6667 387.333 109.667 400 133C412.667 156.333 424.333 177.5 435 196.5C445.667 215.5 456 233.333 466 250C468 252.667 473.833 261 483.5 275C493.167 289 500.333 300.833 505 310.5C509.667 320.167 512 329.667 512 339C512 352.333 502.5 369 483.5 389C464.5 409 443.833 427.333 421.5 444C399.167 460.667 378.5 478.333 359.5 497C340.5 515.667 331 531 331 543C331 549 332.667 556.5 336 565.5C339.333 574.5 342.167 581.333 344.5 586C346.833 590.667 351.5 598.667 358.5 610C365.5 621.333 369.333 627.667 370 629C420.667 720.333 478.667 798.667 544 864C609.333 929.333 687.667 987.333 779 1038C780.333 1038.67 786.667 1042.5 798 1049.5C809.333 1056.5 817.333 1061.17 822 1063.5C826.667 1065.83 833.5 1068.67 842.5 1072C851.5 1075.33 859 1077 865 1077C877 1077 892.333 1067.5 911 1048.5C929.667 1029.5 947.333 1008.83 964 986.5C980.667 964.167 999 943.5 1019 924.5C1039 905.5 1055.67 896 1069 896C1078.33 896 1087.83 898.333 1097.5 903C1107.17 907.667 1119 914.833 1133 924.5C1147 934.167 1155.33 940 1158 942C1174.67 952 1192.5 962.333 1211.5 973C1230.5 983.667 1251.67 995.333 1275 1008C1298.33 1020.67 1316.33 1030.67 1329 1038C1375.67 1061.33 1401 1079 1405 1091C1407 1095.67 1408 1102.67 1408 1112Z' fill='#{$call-widget-mobile-tel-icon-color}'/%3E%3C/svg%3E%0A");
+$call-widget-mobile-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height='1408' viewBox='0 0 1408 1408' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1408 1112C1408 1130 1404.67 1153.5 1398 1182.5C1391.33 1211.5 1384.33 1234.33 1377 1251C1363 1284.33 1322.33 1319.67 1255 1357C1192.33 1391 1130.33 1408 1069 1408C1051 1408 1033.5 1406.83 1016.5 1404.5C999.5 1402.17 980.333 1398 959 1392C937.667 1386 921.833 1381.17 911.5 1377.5C901.167 1373.83 882.667 1367 856 1357C829.333 1347 813 1341 807 1339C741.667 1315.67 683.333 1288 632 1256C546.667 1203.33 458.5 1131.5 367.5 1040.5C276.5 949.5 204.667 861.333 152 776C120 724.667 92.3333 666.333 69 601C67 595 61 578.667 51 552C41 525.333 34.1667 506.833 30.5 496.5C26.8333 486.167 22 470.333 16 449C10 427.667 5.83333 408.5 3.5 391.5C1.16667 374.5 0 357 0 339C0 277.667 17 215.667 51 153C88.3333 85.6667 123.667 45 157 31C173.667 23.6667 196.5 16.6667 225.5 10C254.5 3.33333 278 0 296 0C305.333 0 312.333 1 317 3C329 7 346.667 32.3333 370 79C377.333 91.6667 387.333 109.667 400 133C412.667 156.333 424.333 177.5 435 196.5C445.667 215.5 456 233.333 466 250C468 252.667 473.833 261 483.5 275C493.167 289 500.333 300.833 505 310.5C509.667 320.167 512 329.667 512 339C512 352.333 502.5 369 483.5 389C464.5 409 443.833 427.333 421.5 444C399.167 460.667 378.5 478.333 359.5 497C340.5 515.667 331 531 331 543C331 549 332.667 556.5 336 565.5C339.333 574.5 342.167 581.333 344.5 586C346.833 590.667 351.5 598.667 358.5 610C365.5 621.333 369.333 627.667 370 629C420.667 720.333 478.667 798.667 544 864C609.333 929.333 687.667 987.333 779 1038C780.333 1038.67 786.667 1042.5 798 1049.5C809.333 1056.5 817.333 1061.17 822 1063.5C826.667 1065.83 833.5 1068.67 842.5 1072C851.5 1075.33 859 1077 865 1077C877 1077 892.333 1067.5 911 1048.5C929.667 1029.5 947.333 1008.83 964 986.5C980.667 964.167 999 943.5 1019 924.5C1039 905.5 1055.67 896 1069 896C1078.33 896 1087.83 898.333 1097.5 903C1107.17 907.667 1119 914.833 1133 924.5C1147 934.167 1155.33 940 1158 942C1174.67 952 1192.5 962.333 1211.5 973C1230.5 983.667 1251.67 995.333 1275 1008C1298.33 1020.67 1316.33 1030.67 1329 1038C1375.67 1061.33 1401 1079 1405 1091C1407 1095.67 1408 1102.67 1408 1112Z' fill='#{$call-widget-mobile-tel-icon-color}'/%3E%3Cpath d='M674.701 280.154C703.34 328.691 703.34 389.125 674.701 437.662C665.14 453.866 642.973 456.932 629.394 443.911L614.932 430.047C605.465 420.973 603.33 406.751 609.459 395.158C615.357 383.986 618.44 371.542 618.44 358.908C618.44 346.273 615.357 333.83 609.459 322.657C603.328 311.065 605.465 296.843 614.932 287.768L629.394 273.905C642.973 260.884 665.14 263.949 674.701 280.154ZM896.868 59.3768C1042.44 232.741 1042.32 485.213 896.868 658.436C886.039 671.334 866.54 672.348 854.384 660.695L840.35 647.241C829.313 636.658 828.304 619.328 838.099 607.585C958.365 463.435 958.266 254.26 838.099 110.228C828.304 98.4855 829.31 81.155 840.35 70.5721L854.384 57.1178C866.54 45.4648 886.039 46.4793 896.868 59.3768ZM785.594 168.186C872.852 280.338 872.993 437.294 785.594 549.628C774.968 563.285 754.862 564.762 742.374 552.785L728.292 539.277C717.642 529.062 716.195 512.415 725.182 500.706C789.411 417.021 789.407 300.787 725.182 217.107C716.195 205.399 717.642 188.753 728.292 178.536L742.374 165.028C754.862 153.051 774.968 154.528 785.594 168.186Z' fill='#{$call-widget-mobile-tel-icon-color}'/%3E%3C/svg%3E%0A");
+
+
+@keyframes call-widget-mobile-radial-pulse {
+  from{
+    box-shadow:0 0 0 0 $call-widget-mobile-shadow-from;
+  }
+  to{
+    box-shadow:0 0 0 $call-widget-mobile-shadow-radius $call-widget-mobile-shadow-to;
+  }
+}
+
+@keyframes call-widget-mobile-spin-around {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.call-widget-mobile {
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  font-size: 16px;
+  font-family: Arial, Verdana, Tahoma, sans-serif;
+  z-index: 100;
+  border-radius: 1em;
+  background-color: white;
+  width: 20em;
+  color: #152536;
+  line-height: 1;
+  transform: translateX(25em);
+  transition-timing-function: ease-in;
+
+  animation: call-widget-mobile-radial-pulse 1s infinite;
+  //&:hover{
+  //  animation: none;
+  //}
+
+  &.show{
+    transform: translateX(0em);
+  }
+
+  &, *{
+    box-sizing: border-box;
+  }
+
+  &__photo-sizer{
+    position: relative;
+    display: block;
+    padding-top: 0;
+    transition-timing-function: ease-in;
+  }
+  &__photo.show &__photo-sizer, &__photo.loading &__photo-sizer{
+    padding-top: 3em;
+  }
+  &__photo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.show{
+      img{
+        opacity: 1;
+      }
+    }
+    &.loading{
+      img{
+        opacity: 0;
+      }
+      pointer-events: none;
+
+      &:after {
+        animation: call-widget-mobile-spin-around 500ms infinite linear;
+        border: 2px solid rgba(#000, 0.5);
+        border-radius: 50%;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        content: "";
+        display: block;
+        height: 1em;
+        width: 1em;
+        position: absolute;
+        left: calc(50% - (1em / 2));
+        top: calc(50% - (1em / 2));
+      }
+    }
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 1em;
+      opacity: 0;
+      transition: opacity 0.15s;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  &__time{
+    margin-left: auto;
+  }
+  &__time, &__redirect {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 2em;
+    font-size: 1em;
+    font-weight: 400;
+    padding: 0 0.5em;
+    color: #666;
+  }
+  &__box-info.show + &__box-title {
+    //margin-top: -1em;
+  }
+  &__box-phone, &__box-info, &__box-title, &__photo{
+    display: flex;
+    position: relative;
+    transition-timing-function: ease-in;
+  }
+  &__box-info, &__box-title{
+    height: 0;
+    border-radius: 1em;
+    &.show{
+      height: 2em;
+      background-color: white;
+    }
+  }
+  &__box-info{
+    z-index: 3;
+  }
+  &__box-title{
+    z-index: 4;
+  }
+  &__box-phone{
+    z-index: 5;
+    background-color: white;
+    border-radius: 1em;
+  }
+  &__redirect{
+    padding: 0 0 0 .5em;
+    &__select-wrapper{
+      margin-left: 0.3em;
+      margin-right: 0.3em;
+      margin-bottom: 0;
+    }
+  }
+  &__select{
+    border: 1px solid #ced4da;
+    border-radius: 1em;
+    background-color: white;
+    max-width: 4em;
+    font-size: 1em;
+    &:focus{
+      outline: none;
+      box-shadow: 0 0 0 1px #15253680;
+    }
+  }
+  &__title {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 2em;
+    font-size: 1em;
+    font-weight: 700;
+    padding: 0 0.5em;
+  }
+  &__tel-wrapper {
+    position: relative;
+    width: 10em;
+    height: 3em;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 0.5em;
+    margin-right: auto;
+  }
+  &__tel{
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+  &__btn{
+    padding: 0;
+    border: none;
+    font-size: inherit;
+    cursor: pointer;
+    background-color: transparent;
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 1px #15253680;
+    }
+    &:hover, &:focus{
+      background-color: rgb(239, 239, 239);
+    }
+    &:disabled{
+      cursor: auto;
+      opacity: 0.8;
+      box-shadow: none;
+    }
+    &--primary{
+      background-color: $call-widget-mobile-primary;
+      &:hover, &:focus{
+        background-color: $call-widget-mobile-primary;
+      }
+    }
+    &--danger{
+      background-color: $call-widget-mobile-danger;
+      &:hover, &:focus{
+        background-color: $call-widget-mobile-danger;
+      }
+    }
+    &--warning{
+      background-color: $call-widget-mobile-warning;
+      &:hover, &:focus{
+        background-color: $call-widget-mobile-warning;
+      }
+    }
+  }
+  &__btn-close, &__btn-redirect{
+    background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M10.796 11.2203C11.0685 11.0534 11.405 11.0499 11.6788 11.2155C12.5124 11.7191 14.3103 12.805 15.1438 13.308C15.4776 13.5097 15.6395 13.909 15.5484 14.2972C15.4588 14.6756 15.2423 15.1667 14.7426 15.6822C13.1813 17.2926 10.5499 18.1469 4.68138 12.0934C-1.18713 6.03984 -0.358312 3.32473 1.20222 1.71501C1.70059 1.20023 2.17603 0.976229 2.54223 0.884403C2.91921 0.7891 3.309 0.958837 3.50525 1.30388L5.52976 4.87116C5.69026 5.15359 5.68891 5.5035 5.52639 5.78454L4.70431 7.20783C4.5202 7.52644 4.54178 7.92435 4.76298 8.21652C5.14536 8.72156 5.78872 9.53477 6.47457 10.2422C7.16043 10.9497 7.94878 11.6134 8.43839 12.0078C8.72163 12.236 9.10738 12.2582 9.41625 12.0683L10.796 11.2203ZM10.9238 8.12617C10.8256 8.12509 10.7252 8.07309 10.6257 7.97179L9.1867 6.51165C8.98788 6.3095 9.07621 6.11311 9.15076 6.03695L12.2172 2.92529L11.3597 2.05469C11.1199 1.81174 11.1987 1.65912 11.2666 1.58998C11.3754 1.47937 11.5885 1.47437 11.6298 1.47437C11.7594 1.45467 15.2192 0.961574 15.6522 0.961304C15.8101 0.961304 15.9027 1.02738 15.953 1.08348C16.0724 1.21446 16.0632 1.39737 16.0619 1.42286L16.0618 1.42395L15.6831 5.49347C15.6854 5.54412 15.6831 5.76818 15.5769 5.87569C15.5287 5.92526 15.3946 6.01657 15.191 5.80993L14.255 4.86039L11.1571 8.00422C11.1497 8.0142 11.1401 8.02662 11.1263 8.04092C11.0712 8.09711 10.9996 8.12698 10.9238 8.12617Z' fill='%23152536'/%3E%3C/svg%3E%0A");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 1em 1em;
+    height: 1.8em;
+    width: 1.8em;
+    margin: -0.3em 0;
+    border-radius: .2em;
+    transition: background-color .15s;
+  }
+  &__btn-close{
+    background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 15.799L7.30938 8.48965L0.0207065 1.20097L1.22168 0L8.51035 7.28867L15.799 0L16.9586 1.18027L9.66991 8.46894L17 15.799L15.8197 17L8.48965 9.66991L1.18027 16.9793L0 15.799Z' fill='%23152536'/%3E%3C/svg%3E%0A");
+  }
+  &__btn-circle {
+    margin-left: 0.5em;
+    position: relative;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    cursor: pointer;
+    color: $call-widget-mobile-primary;
+    background-color: currentColor;
+    transition: box-shadow 0.15s linear;
+    &:hover, &:focus{
+      background-color: currentColor;
+      color: $call-widget-mobile-primary;
+    }
+    &:before{
+      content: '';
+      position: absolute;
+      left: 25%;
+      top: 25%;
+      right: 25%;
+      bottom: 25%;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    &:hover, &:focus{
+      outline: none;
+      box-shadow: 0 0 0.5em 0 currentColor;
+    }
+    &:disabled{
+      opacity: 0.8;
+      box-shadow: none;
+    }
+    &--primary{
+      &:before{
+        background-image: $call-widget-mobile-tel-icon;
+        transform: scaleX(-1);
+      }
+      &.active{
+        &:before{
+          background-image: $call-widget-mobile-tel-icon-active;
+        }
+      }
+    }
+    &--danger{
+      color: $call-widget-mobile-danger;
+      &:hover, &:focus{
+        color: $call-widget-mobile-danger;
+      }
+      &:before{
+        background-image: $call-widget-mobile-tel-icon;
+        transform: rotate(135deg);
+      }
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  .call-widget-mobile{
+    font-size: 12px;
+    right: 20px;
+    bottom: 20px;
+  }
+}
