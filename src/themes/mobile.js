@@ -59,40 +59,22 @@ const MobileTheme = {
     },
     // Photo
     fillPhoto(th){
-        let wrapper = document.getElementById(th._entities.photo.wrapperId)
         let img = document.getElementById(th._entities.photo.id)
-        let sizer = document.getElementById(th._entities.photo.sizerId)
         let src = th._entities.photo.src
 
-        sizer.removeAttribute('style')
-        wrapper.classList.add('loading')
         img.setAttribute('src', src)
     },
     loadedPhoto(th) {
-        let wrapper = document.getElementById(th._entities.photo.wrapperId)
-        let img = document.getElementById(th._entities.photo.id)
-        let sizer = document.getElementById(th._entities.photo.sizerId)
 
-        let img_ = document.createElement('img')
-        img_.onload = function (){
-            sizer.style.transitionDuration = th.time+'ms'
-            wrapper.classList.remove('loading')
-            sizer.style.paddingTop = (img_.height / img_.width * 100) + '%'
-        }
-        img_.src = img.src
     },
     showPhoto(th, time){
         let wrapper = document.getElementById(th._entities.photo.wrapperId)
-        let sizer = document.getElementById(th._entities.photo.sizerId)
-        sizer.style.transitionDuration = time+'ms'
+        wrapper.style.transitionDuration = time+'ms'
         wrapper.classList.add('show')
     },
     hidePhoto(th, time) {
         let wrapper = document.getElementById(th._entities.photo.wrapperId)
-        let sizer = document.getElementById(th._entities.photo.sizerId)
-        sizer.removeAttribute('style')
-        sizer.style.transitionDuration = time+'ms'
-        wrapper.classList.remove('loading')
+        wrapper.style.transitionDuration = time+'ms'
         wrapper.classList.remove('show')
     },
     // Tel
@@ -156,19 +138,9 @@ const MobileTheme = {
     getTemplate(entities){
         return h('div', {id: entities.widget.id, class: 'call-widget-mobile'}, [
             h('div', {
-                id: entities.photo.wrapperId,
-                class: 'call-widget-mobile__photo',
+                id: entities.info.id,
+                class: 'call-widget-mobile__box-info',
             }, [
-                h('div', {
-                    id: entities.photo.sizerId,
-                    class: 'call-widget-mobile__photo-sizer',
-                }),
-                h('img', {
-                    id: entities.photo.id,
-                    src: ''
-                }),
-            ]),
-            h('div', {id: entities.info.id, class: 'call-widget-mobile__box-info'}, [
                 h('div', {
                     id: entities.redirect.wrapperId,
                     class: 'call-widget-mobile__redirect',
@@ -193,30 +165,60 @@ const MobileTheme = {
                         style: 'display: none;'
                     }, [
                         h('select', {
-                            class: 'call-widget-mobile__select',
                             id: entities.redirect.selectId,
+                            class: 'call-widget-mobile__select',
                         }, [
-                            h('option', {value: '-'}, '-'),
+                            h('option', {
+                                value: '-'
+                            }, '-'),
                         ]),
                     ]),
                     h('button', {
-                        class: 'call-widget-mobile__btn call-widget-mobile__btn-redirect call-widget-mobile__btn--warning',
-                        type: 'button',
-                        style: 'display: none;',
                         id: entities.redirect.id,
+                        class: 'call-widget-mobile__btn call-widget-mobile__btn-redirect',
+                        type: 'button',
+                        style: 'display: none;'
                     }),
                 ]),
                 h('div', {
                     id: entities.info.timeId,
-                    class: 'call-widget-mobile__time'
-                })
+                    class: 'call-widget-mobile__time',
+                }),
             ]),
-            h('div', {id: entities.title.wrapperId, class: 'call-widget-mobile__box-title'}, [
-                h('div', {id: entities.title.id, class: 'call-widget-mobile__title'})
-            ]),
-            h('div', {class: 'call-widget-mobile__box-phone'}, [
-                h('div', {id: entities.tel.wrapperId, class: 'call-widget-mobile__tel-wrapper'}, [
-                    h('div', {id: entities.tel.id, class: 'call-widget-mobile__tel'})
+            h('div', {
+                class: 'call-widget-mobile__box-main',
+            }, [
+                h('div', {
+                    id: entities.photo.wrapperId,
+                    class: 'call-widget-mobile__photo',
+                }, [
+                    h('img', {
+                        id: entities.photo.id,
+                        src: '',
+                        alt: '',
+                    }),
+                ]),
+                h('div', {
+                    class: 'call-widget-mobile__box-title-phone',
+                }, [
+                    h('div', {
+                        id: entities.title.wrapperId,
+                        class: 'call-widget-mobile__box-title',
+                    }, [
+                        h('div', {
+                            id: entities.title.id,
+                            class: 'call-widget-mobile__title',
+                        }),
+                    ]),
+                    h('div', {
+                        id: entities.tel.wrapperId,
+                        class: 'call-widget-mobile__box-phone',
+                    }, [
+                        h('div', {
+                            id: entities.tel.id,
+                            class: 'call-widget-mobile__phone',
+                        }),
+                    ]),
                 ]),
                 h('button', {
                     id: entities.widget.dangerBtnId,
@@ -228,7 +230,7 @@ const MobileTheme = {
                     class: 'call-widget-mobile__btn call-widget-mobile__btn-circle call-widget-mobile__btn-circle--primary',
                     type: 'button'
                 })
-            ])
+            ]),
         ])
     }
 }

@@ -21,6 +21,14 @@
     <h2>The widget should appear on the bottom right =)</h2>
 
     <div>
+        <button onclick="initTheme(CallWidgetDefaultTheme)">
+            Создать виджет c темой по умолчанию
+        </button>
+        <button onclick="initTheme(CallWidgetMobileTheme)">
+            Создать виджет c мобильной темой
+        </button>
+        <br>
+        <br>
         <button onclick="handleCall({tel: '+79998887766', title: 'Орлов Дмитрий Александрович', photo: 'https://via.placeholder.com/320x200'})">
             Звонок пользователя Орлов Дмитрий Александрович c номера +79998887766
         </button>
@@ -58,12 +66,6 @@
         </button>
         <br>
         <br>
-        <button onclick="initTheme(CallWidgetDefaultTheme)">
-            Создать виджет c темой по умолчанию
-        </button>
-        <button onclick="initTheme(CallWidgetMobileTheme)">
-            Создать виджет c мобильной темой
-        </button>
     </div>
 </div>
 
@@ -72,7 +74,7 @@
 <script src="call-widget-theme-mobile.js"></script>
 
 <script>
-    var callWidget = CallWidget.makeCallWidget(CallWidgetMobileTheme)
+    var callWidget = CallWidget.makeCallWidget(CallWidgetDefaultTheme)
     // Изначально вы должны распечатать шаблон на странице
     callWidget.print()
     var handleBtnPrimaryClick = function (){
@@ -113,10 +115,11 @@
     function initTheme(theme) {
         callWidget.destroy()
         callWidget = CallWidget.makeCallWidget(theme)
+        callWidget.print()
     }
 </script>
 
-<!--START - Шаблон для наглядности-->
+<!--START - Default Шаблон для наглядности-->
 <div class="call-widget" style="display: none;">
     <div class="call-widget__photo">
         <img style="width: 100%" src="https://s3.eu-central-1.amazonaws.com/crm.demetrius.ru/avatars/2231/1545567720-96a24834d215b311f4ca1c8979e279cb.png" alt="">
@@ -155,6 +158,49 @@
         <button class="call-widget__btn call-widget__btn-circle call-widget__btn-circle--primary active" disabled></button>
     </div>
 </div>
-<!--END - Шаблон для наглядности-->
+<!--END - Default Шаблон для наглядности-->
+
+<!--START - Mobile Шаблон для наглядности-->
+<div class="call-widget-mobile">
+    <div class="call-widget-mobile__box-info">
+        <div class="call-widget-mobile__redirect">
+            <button class="call-widget-mobile__btn call-widget-mobile__btn-redirect" style="display: none"></button>
+            <button class="call-widget-mobile__btn call-widget-mobile__btn-close"></button>
+            <span>Перевести на</span>
+            <label class="call-widget-mobile__redirect__select-wrapper" aria-label="Перевести на оператора">
+                <select class="call-widget-mobile__select">
+                    <option value="102">102</option>
+                    <option value="103">103</option>
+                    <option value="104">104</option>
+                    <option value="105">105</option>
+                    <option value="106">106</option>
+                    <option value="107">107</option>
+                    <option value="108">108</option>
+                    <option value="109">109</option>
+                </select>
+            </label>
+            <button class="call-widget-mobile__btn call-widget-mobile__btn-redirect"></button>
+        </div>
+        <div class="call-widget-mobile__time">
+            00:02:30
+        </div>
+    </div>
+    <div class="call-widget-mobile__box-main">
+        <div class="call-widget-mobile__photo">
+            <img src="https://s3.eu-central-1.amazonaws.com/crm.demetrius.ru/avatars/2231/1545567720-96a24834d215b311f4ca1c8979e279cb.png" alt="">
+        </div>
+        <div class="call-widget-mobile__box-title-phone">
+            <div class="call-widget-mobile__box-title">
+                <div class="call-widget-mobile__title">Орлов Дмитрий Александрович</div>
+            </div>
+            <div class="call-widget-mobile__box-phone">
+                <div class="call-widget-mobile__phone">+79998887766</div>
+            </div>
+        </div>
+        <button class="call-widget-mobile__btn call-widget-mobile__btn-circle call-widget-mobile__btn-circle--danger"></button>
+        <button class="call-widget-mobile__btn call-widget-mobile__btn-circle call-widget-mobile__btn-circle--primary"></button>
+    </div>
+</div>
+<!--END - Mobile Шаблон для наглядности-->
 </body>
 </html>

@@ -234,13 +234,13 @@ export const makeCallWidget = function (theme, settings = {}) {
             _schedule.push(ScheduleItem('fillTitle', 0))
             _schedule.push(ScheduleItem('showTitle', 300))
         } else {
-            _schedule.push(ScheduleItem('hideTitle', 150))
+            _schedule.push(ScheduleItem('hideTitle', 300))
         }
         if (photo) {
             _schedule.push(ScheduleItem('fillPhoto', 0))
             _schedule.push(ScheduleItem('showPhoto', 300))
         } else {
-            _schedule.push(ScheduleItem('hidePhoto', 150))
+            _schedule.push(ScheduleItem('hidePhoto', 300))
         }
 
         /**
@@ -260,7 +260,7 @@ export const makeCallWidget = function (theme, settings = {}) {
         // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
         _schedule.push(ScheduleItem('activePrimaryBtn', 0))
         _schedule.push(ScheduleItem('fillInfo', 0))
-        _schedule.push(ScheduleItem('showInfo', 150))
+        _schedule.push(ScheduleItem('showInfo', 300))
         _render()
     }
 
@@ -271,8 +271,8 @@ export const makeCallWidget = function (theme, settings = {}) {
         // Нужно заблокировать кнопки, свернуть все дополнительный поля и скрыть виджет
         // Блокировка кнопок нужна, чтобы не работали события при повторных кликах
         _schedule.push(ScheduleItem('activeDangerBtn', 0))
-        _schedule.push(ScheduleItem('hidePhoto', 150))
-        _schedule.push(ScheduleItem('hideInfo', 150))
+        _schedule.push(ScheduleItem('hidePhoto', 300))
+        _schedule.push(ScheduleItem('hideInfo', 300))
         _schedule.push(ScheduleItem('hideRedirect', 0))
         _schedule.push(ScheduleItem('hideTitle', 300))
         _schedule.push(ScheduleItem('hideWidget', 300))
@@ -332,11 +332,12 @@ export const makeCallWidget = function (theme, settings = {}) {
      */
     const destroy = function () {
         _schedule = []
-        _detachEvents()
 
         let element = document.getElementById(_entities.widget.id)
 
         if (element) {
+            _detachEvents()
+
             if (!('remove' in Element.prototype)) {
                 if (element.parentNode) {
                     element.parentNode.removeChild(element);
