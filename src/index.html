@@ -66,6 +66,9 @@
         </button>
         <br>
         <br>
+        <button onclick="callWidget.hangUpCall()">
+            Положить трубку
+        </button>
     </div>
 </div>
 
@@ -76,29 +79,30 @@
 <script>
     var callWidget = CallWidget.makeCallWidget(CallWidgetDefaultTheme)
     // Изначально вы должны распечатать шаблон на странице
-    callWidget.print()
+    var handleRedirect = function (value){
+        alert('Редирект на оператора '+value)
+    }
     var handleBtnPrimaryClick = function (){
-        // alert('Клик по кнопке принять звонок')
+        alert('Клик по кнопке принять звонок')
 
         // Если вернуть false то можно отключить дальнейшую логику виджета
         // return false
     }
     var handleBtnDangerClick = function (){
-        // alert('Клик по кнопке отклонить звонок')
+        alert('Клик по кнопке отклонить звонок')
 
         // Если вернуть false то можно отключить дальнейшую логику виджета
         // return false
     }
-    /**
-     *
-     * @param value
-     */
-    var handleRedirect = function (value){
-        alert('Редирект на оператора '+value)
+    var initEventsHandles = function (){
+        callWidget.on(CallWidget.EVENT_BTN_PRIMARY_CLICK, handleBtnPrimaryClick)
+        callWidget.on(CallWidget.EVENT_BTN_DANGER_CLICK, handleBtnDangerClick)
+        callWidget.on(CallWidget.EVENT_BTN_REDIRECT_CLICK, handleRedirect)
     }
-    callWidget.on(CallWidget.EVENT_BTN_PRIMARY_CLICK, handleBtnPrimaryClick)
-    callWidget.on(CallWidget.EVENT_BTN_DANGER_CLICK, handleBtnDangerClick)
-    callWidget.on(CallWidget.EVENT_BTN_REDIRECT_CLICK, handleRedirect)
+
+    initEventsHandles()
+    callWidget.print()
+
     function handleCall(data){
         callWidget.setRedirectNumbers(['102', '103', '104', '105', '110', '140'])
         callWidget.call(data)
@@ -115,6 +119,7 @@
     function initTheme(theme) {
         callWidget.destroy()
         callWidget = CallWidget.makeCallWidget(theme)
+        initEventsHandles()
         callWidget.print()
     }
 </script>

@@ -79,6 +79,7 @@ export const makeCallWidget = function (theme, settings = {}) {
 
     const _handleEvent = function (name, value) {
         const handlers = _eventHandlers[name]
+        console.log(handlers)
         // result - нужен чтобы сказать что дальнейшие действия виджета нужно остановить
         let result = true
         for (let i = 0; i < handlers.length; i++) {
@@ -350,6 +351,7 @@ export const makeCallWidget = function (theme, settings = {}) {
 
     const on = function (name, fun) {
         _eventHandlers[name].push(fun)
+        console.log(_eventHandlers)
     }
 
     const off = function (name, fun) {
