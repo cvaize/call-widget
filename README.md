@@ -5,6 +5,8 @@
 Изначально данный виджет написан для работы с виджетом звонков от сервиса Zadarma, так как Zadarma не предоставляет 
 виджет приема звонков.
 
+Вы можете создавать свои темы для виджета, на данный момент есть тема по умолчанию и мобильная тема схожая с iOS
+
 ![](https://github.com/cvaize/call-widget/raw/master/screen.gif)
 
 [![NPM Version](https://img.shields.io/npm/v/@cvaize/call-widget.svg?style=flat-square)](https://www.npmjs.com/package/@cvaize/call-widget)
@@ -26,7 +28,9 @@ $ npm i @cvaize/call-widget
 
 ```javascript
 // Инициализация компонента
-let callWidget = new CallWidget({
+// Тема по умолчнию - CallWidgetDefaultTheme
+// Мобильная тема - CallWidgetMobileTheme
+var callWidget = CallWidget.makeCallWidget(CallWidgetDefaultTheme, {
     id: null, // id, если не указано, сгенерируется автоматически
     selector: 'body', // Вставить шаблон в <body/>
     startedTime: '00:00:00', // Время начинается с 00:00:00
@@ -35,13 +39,13 @@ let callWidget = new CallWidget({
 callWidget.print()
 
 // Подписаться на событие
-callWidget.on(callWidget.EVENT_BTN_PRIMARY_CLICK, function (){
+callWidget.on(CallWidget.EVENT_BTN_PRIMARY_CLICK, function (){
     // Реагировать на нажатие кнопки принять звонок
 })
-callWidget.on(callWidget.EVENT_BTN_DANGER_CLICK, function (){
+callWidget.on(CallWidget.EVENT_BTN_DANGER_CLICK, function (){
     // Реагировать на нажатие кнопки отклонить звонок
 })
-callWidget.on(callWidget.EVENT_BTN_REDIRECT_CLICK, function (){
+callWidget.on(CallWidget.EVENT_BTN_REDIRECT_CLICK, function (){
     // Реагировать на нажатие кнопки перенаправить звонок
 })
 
@@ -84,6 +88,10 @@ callWidget.destroy()
 // Чтобы заново вставить
 callWidget.print()
 ```
+
+## Темы
+1) По умолчанию
+2) Мобильная, схожая с iOS
 
 ## Лицензия
 Эта библиотека выпущена под [лицензией MIT](https://github.com/cvaize/call-widget/blob/master/LICENSE).
