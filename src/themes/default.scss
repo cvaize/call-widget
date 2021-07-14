@@ -40,7 +40,7 @@ $call-widget-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408' height
   width: 20em;
   color: #152536;
   line-height: 1;
-  transform: translateX(25em);
+  transform: translateX(calc(100% + 50px));
   transition-timing-function: ease-in;
 
   animation: call-widget-radial-pulse 1s infinite;

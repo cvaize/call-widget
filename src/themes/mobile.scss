@@ -20,7 +20,7 @@ $call-widget-mobile-tel-icon-active: url("data:image/svg+xml,%3Csvg width='1408'
   width: 22.5em;
   color: white;
   line-height: 1;
-  transform: translateX(25em);
+  transform: translateX(calc(100% + 20px));
   transition-timing-function: ease-in;
   background-color: $call-widget-mobile-bg-color;
   padding: 1.25em 0.875em;
